@@ -1,0 +1,3741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>Spelling Practice</title>
+<meta name="theme-color" content="#6C7BE0">
+<meta name="apple-mobile-web-app-title" content="Spelling">
+<link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
+<link rel="icon" type="image/png" href="icon-180.png">
+<link rel="manifest" href="manifest.webmanifest">
+<style>
+  :root{
+    --ink:#3A3550;
+    --ink-soft:#6E6885;
+    --bg1:#FDF6F9;
+    --bg2:#EFF6FB;
+    --card:#FFFFFF;
+    --primary:#6C7BE0;
+    --primary-dark:#5563c9;
+    --success:#3FA77E;
+    --success-bg:#E6F6EF;
+    --warm:#E2864A;
+    --warm-bg:#FCEFE3;
+    --pink:#FFE7F0;
+    --blue:#E3F3FF;
+    --mint:#E4F6EE;
+    --line:#ECE8F2;
+    --shadow:0 8px 22px rgba(80,70,120,.10);
+    --radius:22px;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:ui-rounded,"SF Pro Rounded","Hiragino Maru Gothic ProN","Segoe UI",system-ui,-apple-system,sans-serif;
+    color:var(--ink);
+    background:linear-gradient(160deg,var(--bg1),var(--bg2));
+    min-height:100vh;
+    -webkit-text-size-adjust:100%;
+    overscroll-behavior:none;
+  }
+  .wrap{max-width:760px;margin:0 auto;padding:18px 18px 60px;}
+  .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;}
+  .home-btn{
+    border:none;background:var(--card);color:var(--ink);box-shadow:var(--shadow);
+    border-radius:16px;padding:10px 14px;font-size:16px;font-weight:700;cursor:pointer;
+    display:inline-flex;align-items:center;gap:6px;font-family:inherit;
+  }
+  .home-btn:active{transform:scale(.96);}
+  .stat-pills{display:flex;gap:8px;}
+  .pill{background:var(--card);box-shadow:var(--shadow);border-radius:14px;padding:7px 12px;font-size:13px;font-weight:700;line-height:1;display:flex;flex-direction:column;align-items:center;gap:3px;min-width:54px;}
+  .pill .n{font-size:18px;}
+  .pill.m .n{color:var(--success);}
+  .pill.l .n{color:var(--warm);}
+  .pill .lbl{font-size:10px;font-weight:700;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.04em;}
+
+  .hero{text-align:center;margin:10px 0 22px;}
+  .hero h1{font-size:30px;margin:0 0 6px;font-weight:800;letter-spacing:-.01em;}
+  .hero p{margin:0;color:var(--ink-soft);font-size:16px;font-weight:600;}
+
+  .progress-card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;margin-bottom:22px;}
+  .progress-card .row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px;}
+  .progress-card .row b{font-size:16px;}
+  .progress-card .row span{color:var(--ink-soft);font-size:14px;font-weight:600;}
+  .bar{height:14px;background:#EFEAF4;border-radius:99px;overflow:hidden;}
+  .bar > i{display:block;height:100%;background:linear-gradient(90deg,#7E8CE8,#3FA77E);border-radius:99px;transition:width .5s ease;}
+
+  .section-label{font-size:13px;font-weight:800;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.06em;margin:0 4px 12px;}
+
+  .lists{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  @media(max-width:520px){.lists{grid-template-columns:1fr;}}
+  .list-card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;cursor:pointer;border:2px solid transparent;transition:transform .12s ease;text-align:left;font-family:inherit;color:var(--ink);}
+  .list-card:active{transform:scale(.98);}
+  .list-card .emoji{font-size:26px;}
+  .list-card h3{margin:6px 0 2px;font-size:17px;font-weight:800;}
+  .list-card .hint{font-size:13px;color:var(--ink-soft);font-weight:600;margin-bottom:10px;min-height:32px;}
+  .list-card .mini{display:flex;align-items:center;gap:8px;}
+  .mini-bar{flex:1;height:8px;background:#EFEAF4;border-radius:99px;overflow:hidden;}
+  .mini-bar > i{display:block;height:100%;background:var(--success);border-radius:99px;}
+  .mini .frac{font-size:12px;font-weight:800;color:var(--ink-soft);white-space:nowrap;}
+
+  /* mode choice */
+  .panel{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:24px;}
+  .choice{display:grid;gap:14px;margin-top:18px;}
+  .choice button{font-family:inherit;border:none;border-radius:18px;padding:18px;text-align:left;cursor:pointer;display:flex;gap:14px;align-items:center;color:var(--ink);}
+  .choice button:active{transform:scale(.985);}
+  .choice .study{background:var(--mint);}
+  .choice .test{background:var(--blue);}
+  .choice .big{font-size:30px;}
+  .choice b{display:block;font-size:18px;font-weight:800;}
+  .choice small{font-size:13px;color:var(--ink-soft);font-weight:600;}
+
+  /* session */
+  .sess-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+  .sess-head .count{font-weight:800;color:var(--ink-soft);font-size:14px;}
+  .qbar{height:8px;background:#EFEAF4;border-radius:99px;overflow:hidden;margin-bottom:18px;}
+  .qbar > i{display:block;height:100%;background:var(--primary);border-radius:99px;transition:width .35s ease;}
+
+  .word-stage{text-align:center;padding:6px 0 4px;}
+  .listen-hint{color:var(--ink-soft);font-weight:700;font-size:15px;margin:4px 0 16px;}
+  .speak-btn{
+    border:none;border-radius:24px;background:var(--primary);color:#fff;
+    font-family:inherit;font-weight:800;font-size:20px;cursor:pointer;
+    padding:22px 26px;box-shadow:0 10px 20px rgba(108,123,224,.35);
+    display:inline-flex;align-items:center;gap:12px;
+  }
+  .speak-btn:active{transform:scale(.97);}
+  .speak-btn .ic{font-size:26px;line-height:1;}
+  .helper-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:14px;}
+  .chip{border:none;font-family:inherit;background:#F1EEF8;color:var(--ink);border-radius:14px;padding:10px 14px;font-weight:700;font-size:14px;cursor:pointer;}
+  .chip:active{transform:scale(.96);}
+
+  .reveal-word{font-size:44px;font-weight:800;letter-spacing:.04em;margin:10px 0 2px;word-break:break-word;}
+  .syl{font-size:20px;color:var(--primary-dark);font-weight:800;letter-spacing:.02em;margin-bottom:8px;}
+  .sentence{color:var(--ink-soft);font-size:16px;font-weight:600;font-style:italic;margin:4px auto 4px;max-width:520px;line-height:1.45;}
+
+  .answer{
+    width:100%;font-family:inherit;font-size:30px;font-weight:800;text-align:center;
+    padding:16px 14px;border-radius:18px;border:3px solid var(--line);background:#fff;color:var(--ink);
+    letter-spacing:.06em;margin:20px 0 14px;outline:none;
+  }
+  .answer:focus{border-color:var(--primary);}
+  .answer.ok{border-color:var(--success);background:var(--success-bg);}
+  .answer.no{border-color:var(--warm);background:var(--warm-bg);}
+
+  .primary-btn{width:100%;border:none;font-family:inherit;border-radius:18px;background:var(--primary);color:#fff;font-weight:800;font-size:19px;padding:17px;cursor:pointer;box-shadow:0 8px 18px rgba(108,123,224,.3);}
+  .primary-btn:active{transform:scale(.99);}
+  .primary-btn.green{background:var(--success);box-shadow:0 8px 18px rgba(63,167,126,.3);}
+  .ghost-btn{width:100%;border:2px solid var(--line);font-family:inherit;border-radius:18px;background:#fff;color:var(--ink-soft);font-weight:800;font-size:16px;padding:14px;cursor:pointer;margin-top:10px;}
+
+  .feedback{text-align:center;margin:6px 0 16px;min-height:26px;}
+  .feedback .good{color:var(--success);font-weight:800;font-size:20px;}
+  .feedback .try{color:var(--warm);font-weight:800;font-size:18px;}
+  .correct-show{font-size:15px;color:var(--ink-soft);font-weight:700;margin-top:8px;}
+  .correct-show .cw{font-size:30px;letter-spacing:.05em;display:block;margin-top:4px;}
+  .correct-show .cw .miss{color:var(--warm);text-decoration:underline;}
+  .correct-show .cw .hit{color:var(--success);}
+
+  /* summary */
+  .summary{text-align:center;}
+  .summary .big-emoji{font-size:60px;}
+  .summary h2{font-size:26px;margin:8px 0 4px;}
+  .summary p{color:var(--ink-soft);font-weight:600;font-size:16px;margin:2px 0 18px;}
+  .sumrow{display:flex;gap:12px;justify-content:center;margin-bottom:18px;}
+  .sumbox{background:#F6F4FB;border-radius:16px;padding:14px 18px;}
+  .sumbox .n{font-size:28px;font-weight:800;}
+  .sumbox.m .n{color:var(--success);}
+  .sumbox.l .n{color:var(--warm);}
+  .sumbox .lbl{font-size:12px;font-weight:700;color:var(--ink-soft);}
+
+  .hidden{display:none!important;}
+  .footer-note{text-align:center;color:var(--ink-soft);font-size:12px;font-weight:600;margin-top:30px;opacity:.8;}
+  .reset-link{background:none;border:none;color:var(--ink-soft);font-family:inherit;font-weight:700;font-size:13px;text-decoration:underline;cursor:pointer;margin-top:8px;}
+  .speed-row{display:flex;gap:8px;justify-content:center;align-items:center;margin-top:18px;flex-wrap:wrap;}
+  .speed-row .lbl{font-size:13px;font-weight:700;color:var(--ink-soft);}
+  .seg{display:inline-flex;background:#F1EEF8;border-radius:12px;padding:3px;}
+  .seg button{border:none;background:none;font-family:inherit;font-weight:800;font-size:13px;padding:7px 12px;border-radius:9px;color:var(--ink-soft);cursor:pointer;}
+  .seg button.on{background:#fff;color:var(--primary-dark);box-shadow:0 2px 6px rgba(0,0,0,.06);}
+
+  /* ---------- GAME LAYER ---------- */
+  .game-pills{display:flex;gap:8px;align-items:center;}
+  .coin-pill,.streak-flame{background:var(--card);box-shadow:var(--shadow);border-radius:14px;padding:8px 12px;font-weight:800;font-size:15px;display:inline-flex;align-items:center;gap:5px;line-height:1;}
+  .coin-pill b,.streak-flame b{font-variant-numeric:tabular-nums;}
+  .streak-flame{background:#FFF1E6;color:#E2864A;}
+  .pill.c .n{color:#E0A21E;}
+
+  .level-card{background:linear-gradient(135deg,#EEF1FF,#FDEFF7);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px 18px;margin-bottom:18px;display:flex;align-items:center;gap:14px;}
+  .level-card .rank-emoji{font-size:40px;line-height:1;}
+  .level-card .rank-info{flex:1;min-width:0;}
+  .level-card .rank-name{font-size:18px;font-weight:800;}
+  .level-card .rank-sub{font-size:13px;color:var(--ink-soft);font-weight:700;margin:2px 0 8px;}
+  .level-bar{height:10px;background:#fff;border-radius:99px;overflow:hidden;box-shadow:inset 0 0 0 1px rgba(0,0,0,.05);}
+  .level-bar>i{display:block;height:100%;background:linear-gradient(90deg,#8C7BEA,#E0A21E);border-radius:99px;transition:width .5s ease;}
+  .level-coins{font-weight:800;color:#C9881A;font-size:15px;white-space:nowrap;}
+
+  .badge-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:22px;}
+  @media(max-width:520px){.badge-grid{grid-template-columns:repeat(3,1fr);}}
+  .badge{background:var(--card);border-radius:16px;box-shadow:var(--shadow);padding:12px 8px;text-align:center;}
+  .badge .bi{font-size:26px;line-height:1;filter:grayscale(1);opacity:.32;}
+  .badge.on .bi{filter:none;opacity:1;}
+  .badge .bn{font-size:11px;font-weight:800;color:var(--ink-soft);margin-top:5px;line-height:1.15;}
+  .badge.on .bn{color:var(--ink);}
+
+  .mascot{text-align:center;font-size:54px;line-height:1;margin:0 0 6px;transition:transform .15s;}
+  .mascot.pop{animation:pop .45s ease;}
+  @keyframes pop{0%{transform:scale(1)}40%{transform:scale(1.35) rotate(-6deg)}100%{transform:scale(1)}}
+  .streak-banner{font-weight:800;color:#E2864A;font-size:16px;margin-bottom:4px;animation:pop .45s ease;}
+
+  .answer.ok{animation:pop .35s ease;}
+  .answer.no{animation:shake .4s ease;}
+  @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+
+  #confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:50;}
+  .confetti-bit{position:absolute;top:-20px;width:10px;height:14px;border-radius:2px;will-change:transform,opacity;animation:fall linear forwards;}
+  @keyframes fall{0%{opacity:1}100%{transform:translateY(110vh) rotate(720deg);opacity:.85}}
+
+  .coin-float{position:fixed;font-weight:800;font-size:22px;color:#E0A21E;pointer-events:none;z-index:60;animation:floatup 1.05s ease forwards;text-shadow:0 1px 0 #fff;}
+  @keyframes floatup{0%{transform:translate(-50%,0);opacity:0}15%{opacity:1}100%{transform:translate(-50%,-72px);opacity:0}}
+
+  .sumbox.c .n{color:#E0A21E;}
+  .levelup-banner{background:linear-gradient(135deg,#FFF3D6,#FFE0EE);border-radius:16px;padding:14px;font-weight:800;margin-bottom:14px;}
+  .badge-pop{display:inline-flex;align-items:center;gap:6px;background:#F2EEFB;border-radius:12px;padding:8px 12px;font-weight:800;font-size:13px;margin:4px;}
+  .toast{position:fixed;left:50%;top:18px;transform:translateX(-50%);background:#3A3550;color:#fff;font-weight:800;padding:12px 18px;border-radius:14px;box-shadow:0 10px 24px rgba(0,0,0,.25);z-index:70;font-size:14px;max-width:88vw;text-align:center;animation:toastin .35s ease, toastout .4s ease 2.3s forwards;}
+  @keyframes toastin{from{opacity:0;transform:translateX(-50%) translateY(-12px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+  @keyframes toastout{to{opacity:0;transform:translateX(-50%) translateY(-12px)}}
+  @media(prefers-reduced-motion:reduce){*{animation:none!important;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ===== HOME ===== -->
+  <section id="screen-home">
+    <div class="topbar">
+      <div style="font-weight:800;font-size:18px;">✏️ Spelling Practice</div>
+      <div class="stat-pills">
+        <div class="pill c"><span class="n" id="home-coins">0</span><span class="lbl">Coins</span></div>
+        <div class="pill m"><span class="n" id="stat-mastered">0</span><span class="lbl">Got it</span></div>
+        <div class="pill l"><span class="n" id="stat-learning">0</span><span class="lbl">Practicing</span></div>
+      </div>
+    </div>
+
+    <div class="hero">
+      <h1 id="greeting">Hi! Let's practice spelling.</h1>
+      <p>Pick a word set. Listen, then spell it out.</p>
+    </div>
+
+    <div class="level-card">
+      <div class="rank-emoji" id="rank-emoji">🌱</div>
+      <div class="rank-info">
+        <div class="rank-name" id="rank-name">Spelling Sprout</div>
+        <div class="rank-sub" id="rank-sub">Earn coins by spelling words right!</div>
+        <div class="level-bar"><i id="level-fill" style="width:4%"></i></div>
+      </div>
+      <div class="level-coins" id="level-coins">🪙 0</div>
+    </div>
+
+    <div class="progress-card">
+      <div class="row"><b>Your progress</b><span id="prog-text">0 of 0 words mastered</span></div>
+      <div class="bar"><i id="prog-fill" style="width:0%"></i></div>
+    </div>
+
+    <p class="section-label">Word sets</p>
+    <div class="lists" id="list-grid"></div>
+
+    <p class="section-label">Badges</p>
+    <div class="badge-grid" id="badge-grid"></div>
+
+    <div style="text-align:center;">
+      <button class="reset-link" id="reset-btn">Start over (clear all progress)</button>
+    </div>
+    <p class="footer-note">Works offline. Tap a word set to begin.</p>
+  </section>
+
+  <!-- ===== MODE CHOICE ===== -->
+  <section id="screen-mode" class="hidden">
+    <div class="topbar">
+      <button class="home-btn" data-home>← Home</button>
+      <div class="stat-pills"><div class="pill"><span class="n" id="mode-frac">0/0</span><span class="lbl">mastered</span></div></div>
+    </div>
+    <div class="panel">
+      <div style="text-align:center;">
+        <div style="font-size:34px" id="mode-emoji">📘</div>
+        <h2 style="margin:6px 0 0;font-size:22px;" id="mode-title">Word set</h2>
+        <p style="color:var(--ink-soft);font-weight:600;margin:6px 0 0;" id="mode-hint"></p>
+      </div>
+      <div class="choice">
+        <button class="study" data-mode="study">
+          <span class="big">👀</span>
+          <span><b>Study mode</b><small>See the word, hide it, then spell it. Great for learning new words.</small></span>
+        </button>
+        <button class="test" data-mode="test">
+          <span class="big">🎧</span>
+          <span><b>Spelling test</b><small>Listen and spell — no peeking. Check what you really know.</small></span>
+        </button>
+      </div>
+      <div class="speed-row">
+        <span class="lbl">Voice speed</span>
+        <div class="seg" id="speed-seg">
+          <button data-rate="0.7">Slow</button>
+          <button data-rate="0.85" class="on">Normal</button>
+          <button data-rate="1">Faster</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SESSION ===== -->
+  <section id="screen-session" class="hidden">
+    <div class="topbar">
+      <button class="home-btn" data-home>← Home</button>
+      <div class="game-pills">
+        <span class="streak-flame hidden" id="streak-flame">🔥 <b id="streak-n">0</b></span>
+        <span class="coin-pill">🪙 <b id="sess-coins">0</b></span>
+      </div>
+    </div>
+    <div class="count" id="sess-count" style="text-align:center;font-weight:800;color:var(--ink-soft);font-size:13px;margin-bottom:6px;">1 / 10</div>
+    <div class="qbar"><i id="qfill" style="width:0%"></i></div>
+    <div class="mascot" id="mascot">😺</div>
+
+    <div class="panel">
+      <!-- STUDY: see word step -->
+      <div id="study-see" class="word-stage hidden">
+        <div class="reveal-word" id="see-word">word</div>
+        <div class="syl" id="see-syl"></div>
+        <button class="speak-btn" id="see-hear"><span class="ic">🔊</span> Hear it</button>
+        <div class="helper-row">
+          <button class="chip" id="see-slow">🐢 Slowly</button>
+          <button class="chip" id="see-sentence">💬 In a sentence</button>
+        </div>
+        <div class="sentence" id="see-sent"></div>
+        <button class="primary-btn" id="see-ready" style="margin-top:18px;">Hide it — I'll spell it ✏️</button>
+      </div>
+
+      <!-- SPELL step (shared by study + test) -->
+      <div id="spell-step" class="word-stage hidden">
+        <div class="listen-hint" id="spell-instr">Listen, then type the word</div>
+        <button class="speak-btn" id="hear-btn"><span class="ic">🔊</span> Hear it</button>
+        <div class="helper-row">
+          <button class="chip" id="slow-btn">🐢 Slowly</button>
+          <button class="chip" id="sent-btn">💬 In a sentence</button>
+        </div>
+        <input class="answer" id="answer" type="text" inputmode="text"
+               autocapitalize="none" autocorrect="off" autocomplete="off" spellcheck="false"
+               enterkeyhint="done" placeholder="type here">
+        <div class="feedback" id="feedback"></div>
+        <button class="primary-btn" id="check-btn">Check it ✓</button>
+        <button class="ghost-btn hidden" id="next-btn">Next word →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SUMMARY ===== -->
+  <section id="screen-summary" class="hidden">
+    <div class="topbar"><button class="home-btn" data-home>← Home</button><span></span></div>
+    <div class="panel summary">
+      <div class="big-emoji" id="sum-emoji">🌟</div>
+      <h2 id="sum-title">Nice work!</h2>
+      <p id="sum-sub">You finished the set.</p>
+      <div class="sumrow">
+        <div class="sumbox c"><div class="n" id="sum-coins">0</div><div class="lbl">coins earned</div></div>
+        <div class="sumbox m"><div class="n" id="sum-right">0</div><div class="lbl">spelled right</div></div>
+        <div class="sumbox l"><div class="n" id="sum-practice">0</div><div class="lbl">keep practicing</div></div>
+      </div>
+      <div id="sum-extra"></div>
+      <button class="primary-btn green" id="again-btn">Practice this set again</button>
+      <button class="ghost-btn" data-home>Back to home</button>
+    </div>
+  </section>
+
+</div>
+
+<div id="confetti"></div>
+<script>
+/* ============================================================
+   WORD DATA  — grouped by spelling pattern (5th grade)
+   w = word, syl = syllable hint, s = sentence, ctx = true when
+   the word is a homophone and needs its sentence to make sense.
+============================================================ */
+const LISTS = [
+{
+"id": "everyday",
+"emoji": "⭐",
+"name": "Tricky Everyday Words",
+"hint": "Common words that are easy to misspell.",
+"words": [
+{
+"w": "because",
+"syl": "be·cause",
+"s": "I stayed inside because it was raining."
+},
+{
+"w": "friend",
+"syl": "friend",
+"s": "My best friend lives next door."
+},
+{
+"w": "beautiful",
+"syl": "beau·ti·ful",
+"s": "The sunset was beautiful tonight."
+},
+{
+"w": "different",
+"syl": "dif·fer·ent",
+"s": "We picked two different flavors."
+},
+{
+"w": "probably",
+"syl": "prob·a·bly",
+"s": "It will probably rain later."
+},
+{
+"w": "separate",
+"syl": "sep·a·rate",
+"s": "Please separate the cans from the bottles."
+},
+{
+"w": "surprise",
+"syl": "sur·prise",
+"s": "We planned a surprise party for her."
+},
+{
+"w": "finally",
+"syl": "fi·nal·ly",
+"s": "The bus finally arrived."
+},
+{
+"w": "favorite",
+"syl": "fa·vor·ite",
+"s": "Pizza is my favorite food."
+},
+{
+"w": "special",
+"syl": "spe·cial",
+"s": "Today is a special day."
+},
+{
+"w": "calendar",
+"syl": "cal·en·dar",
+"s": "I marked the date on the calendar."
+},
+{
+"w": "business",
+"syl": "busi·ness",
+"s": "Her family runs a small business."
+},
+{
+"w": "restaurant",
+"syl": "res·tau·rant",
+"s": "We ate at a new restaurant."
+},
+{
+"w": "definitely",
+"syl": "def·i·nite·ly",
+"s": "I will definitely be there."
+},
+{
+"w": "again",
+"syl": "a·gain",
+"s": "Let's try the puzzle again."
+},
+{
+"w": "almost",
+"syl": "al·most",
+"s": "We are almost finished."
+},
+{
+"w": "always",
+"syl": "al·ways",
+"s": "She always brushes her teeth."
+},
+{
+"w": "another",
+"syl": "an·oth·er",
+"s": "Can I have another apple?"
+},
+{
+"w": "around",
+"syl": "a·round",
+"s": "We walked around the lake."
+},
+{
+"w": "before",
+"syl": "be·fore",
+"s": "Wash your hands before dinner."
+},
+{
+"w": "certain",
+"syl": "cer·tain",
+"s": "I am certain the answer is correct."
+},
+{
+"w": "cousin",
+"syl": "cous·in",
+"s": "My cousin came to visit."
+},
+{
+"w": "enough",
+"syl": "e·nough",
+"s": "We have enough chairs for everyone."
+},
+{
+"w": "especially",
+"syl": "es·pe·cial·ly",
+"s": "I love fruit, especially mangoes."
+},
+{
+"w": "except",
+"syl": "ex·cept",
+"s": "Everyone came except Sam."
+},
+{
+"w": "exercise",
+"syl": "ex·er·cise",
+"s": "We exercise in gym class."
+},
+{
+"w": "experience",
+"syl": "ex·pe·ri·ence",
+"s": "Riding a horse was a new experience."
+},
+{
+"w": "familiar",
+"syl": "fa·mil·iar",
+"s": "That song sounds familiar."
+},
+{
+"w": "grammar",
+"syl": "gram·mar",
+"s": "We learned grammar rules in class."
+},
+{
+"w": "guess",
+"syl": "guess",
+"s": "Can you guess the answer?"
+},
+{
+"w": "interest",
+"syl": "in·ter·est",
+"s": "She has an interest in space."
+},
+{
+"w": "necessary",
+"syl": "nec·es·sar·y",
+"s": "A pencil is necessary for the test."
+},
+{
+"w": "often",
+"syl": "of·ten",
+"s": "We often walk to school."
+},
+{
+"w": "people",
+"syl": "peo·ple",
+"s": "Many people came to the fair."
+},
+{
+"w": "perhaps",
+"syl": "per·haps",
+"s": "Perhaps we can go tomorrow."
+},
+{
+"w": "popular",
+"syl": "pop·u·lar",
+"s": "That game is very popular."
+},
+{
+"w": "really",
+"syl": "re·al·ly",
+"s": "I really enjoyed the show."
+},
+{
+"w": "remember",
+"syl": "re·mem·ber",
+"s": "Remember to bring your lunch."
+}
+]
+},
+{
+"id": "double",
+"emoji": "🔁",
+"name": "Double Letters",
+"hint": "Words with double consonants.",
+"words": [
+{
+"w": "beginning",
+"syl": "be·gin·ning",
+"s": "We missed the beginning of the movie."
+},
+{
+"w": "committee",
+"syl": "com·mit·tee",
+"s": "The committee met on Friday."
+},
+{
+"w": "occasion",
+"syl": "oc·ca·sion",
+"s": "She wore a dress for the occasion."
+},
+{
+"w": "occurred",
+"syl": "oc·curred",
+"s": "The accident occurred at noon."
+},
+{
+"w": "embarrass",
+"syl": "em·bar·rass",
+"s": "Don't embarrass me in front of friends."
+},
+{
+"w": "recommend",
+"syl": "rec·om·mend",
+"s": "I recommend this book to everyone."
+},
+{
+"w": "address",
+"syl": "ad·dress",
+"s": "Write your address on the form."
+},
+{
+"w": "success",
+"syl": "suc·cess",
+"s": "The bake sale was a big success."
+},
+{
+"w": "tomorrow",
+"syl": "to·mor·row",
+"s": "We leave for the trip tomorrow."
+},
+{
+"w": "balloon",
+"syl": "bal·loon",
+"s": "The red balloon floated away."
+},
+{
+"w": "button",
+"syl": "but·ton",
+"s": "Press the green button to start."
+},
+{
+"w": "dessert",
+"syl": "des·sert",
+"s": "We had ice cream for dessert."
+},
+{
+"w": "possess",
+"syl": "pos·sess",
+"s": "She does not possess a phone yet."
+},
+{
+"w": "happily",
+"syl": "hap·pi·ly",
+"s": "They lived happily after that."
+},
+{
+"w": "accident",
+"syl": "ac·ci·dent",
+"s": "It was just a small accident."
+},
+{
+"w": "appear",
+"syl": "ap·pear",
+"s": "Stars appear at night."
+},
+{
+"w": "arrive",
+"syl": "ar·rive",
+"s": "We will arrive at six."
+},
+{
+"w": "allow",
+"syl": "al·low",
+"s": "Please allow me to help."
+},
+{
+"w": "apple",
+"syl": "ap·ple",
+"s": "She ate a juicy apple."
+},
+{
+"w": "bottle",
+"syl": "bot·tle",
+"s": "Fill the bottle with water."
+},
+{
+"w": "cabbage",
+"syl": "cab·bage",
+"s": "We chopped the cabbage for soup."
+},
+{
+"w": "coffee",
+"syl": "cof·fee",
+"s": "My dad drinks coffee in the morning."
+},
+{
+"w": "cottage",
+"syl": "cot·tage",
+"s": "They stayed in a small cottage."
+},
+{
+"w": "dinner",
+"syl": "din·ner",
+"s": "We eat dinner at seven."
+},
+{
+"w": "follow",
+"syl": "fol·low",
+"s": "Follow me to the library."
+},
+{
+"w": "gallon",
+"syl": "gal·lon",
+"s": "We bought a gallon of milk."
+},
+{
+"w": "hello",
+"syl": "hel·lo",
+"s": "She waved and said hello."
+},
+{
+"w": "hobby",
+"syl": "hob·by",
+"s": "Painting is her favorite hobby."
+},
+{
+"w": "kitten",
+"syl": "kit·ten",
+"s": "The kitten chased a string."
+},
+{
+"w": "ladder",
+"syl": "lad·der",
+"s": "He climbed the tall ladder."
+},
+{
+"w": "lesson",
+"syl": "les·son",
+"s": "Today's lesson is about plants."
+},
+{
+"w": "mirror",
+"syl": "mir·ror",
+"s": "She looked in the mirror."
+},
+{
+"w": "rabbit",
+"syl": "rab·bit",
+"s": "A rabbit hopped across the yard."
+},
+{
+"w": "summer",
+"syl": "sum·mer",
+"s": "We swim a lot in summer."
+},
+{
+"w": "traffic",
+"syl": "traf·fic",
+"s": "There was heavy traffic today."
+}
+]
+},
+{
+"id": "silent",
+"emoji": "🤫",
+"name": "Silent Letters",
+"hint": "Letters you write but don't hear.",
+"words": [
+{
+"w": "knowledge",
+"syl": "knowl·edge",
+"s": "She has lots of knowledge about animals."
+},
+{
+"w": "wrinkle",
+"syl": "wrin·kle",
+"s": "There was a wrinkle in his shirt."
+},
+{
+"w": "autumn",
+"syl": "au·tumn",
+"s": "Leaves change color in autumn."
+},
+{
+"w": "column",
+"syl": "col·umn",
+"s": "He added a new column to the table."
+},
+{
+"w": "doubt",
+"syl": "doubt",
+"s": "I have no doubt you can do it."
+},
+{
+"w": "honest",
+"syl": "hon·est",
+"s": "An honest person tells the truth."
+},
+{
+"w": "knight",
+"syl": "knight",
+"s": "The knight rode a brave horse."
+},
+{
+"w": "scissors",
+"syl": "scis·sors",
+"s": "Cut the paper with the scissors."
+},
+{
+"w": "listen",
+"syl": "lis·ten",
+"s": "Please listen to the directions."
+},
+{
+"w": "fasten",
+"syl": "fas·ten",
+"s": "Fasten your seatbelt before we drive."
+},
+{
+"w": "whistle",
+"syl": "whis·tle",
+"s": "The coach blew the whistle."
+},
+{
+"w": "climb",
+"syl": "climb",
+"s": "We like to climb the big hill."
+},
+{
+"w": "wrist",
+"syl": "wrist",
+"s": "She wore a watch on her wrist."
+},
+{
+"w": "answer",
+"syl": "an·swer",
+"s": "Raise your hand to answer."
+},
+{
+"w": "comb",
+"syl": "comb",
+"s": "Use a comb to fix your hair."
+},
+{
+"w": "crumb",
+"syl": "crumb",
+"s": "A crumb fell on the floor."
+},
+{
+"w": "design",
+"syl": "de·sign",
+"s": "She drew a cool design."
+},
+{
+"w": "ghost",
+"syl": "ghost",
+"s": "The story had a friendly ghost."
+},
+{
+"w": "half",
+"syl": "half",
+"s": "I ate half of the sandwich."
+},
+{
+"w": "hour",
+"syl": "hour",
+"s": "We waited for an hour."
+},
+{
+"w": "island",
+"syl": "is·land",
+"s": "They sailed to a small island."
+},
+{
+"w": "knee",
+"syl": "knee",
+"s": "He scraped his knee at recess."
+},
+{
+"w": "knife",
+"syl": "knife",
+"s": "Cut the bread with a knife."
+},
+{
+"w": "knock",
+"syl": "knock",
+"s": "Please knock before you enter."
+},
+{
+"w": "lamb",
+"syl": "lamb",
+"s": "The lamb followed its mother."
+},
+{
+"w": "sign",
+"syl": "sign",
+"s": "Read the stop sign carefully."
+},
+{
+"w": "thumb",
+"syl": "thumb",
+"s": "She gave a thumb up."
+},
+{
+"w": "wrap",
+"syl": "wrap",
+"s": "Let's wrap the gift in paper."
+},
+{
+"w": "write",
+"syl": "write",
+"s": "I will write a letter to grandma."
+},
+{
+"w": "calf",
+"syl": "calf",
+"s": "The baby cow is called a calf."
+}
+]
+},
+{
+"id": "tion",
+"emoji": "🎵",
+"name": "-tion & -sion Endings",
+"hint": "Words ending with the 'shun' sound.",
+"words": [
+{
+"w": "education",
+"syl": "ed·u·ca·tion",
+"s": "A good education is important."
+},
+{
+"w": "attention",
+"syl": "at·ten·tion",
+"s": "Please pay attention to the lesson."
+},
+{
+"w": "decision",
+"syl": "de·ci·sion",
+"s": "It was a hard decision to make."
+},
+{
+"w": "division",
+"syl": "di·vi·sion",
+"s": "We learned long division in math."
+},
+{
+"w": "discussion",
+"syl": "dis·cus·sion",
+"s": "The class had a fun discussion."
+},
+{
+"w": "expression",
+"syl": "ex·pres·sion",
+"s": "She had a happy expression."
+},
+{
+"w": "information",
+"syl": "in·for·ma·tion",
+"s": "I found the information online."
+},
+{
+"w": "population",
+"syl": "pop·u·la·tion",
+"s": "The city has a large population."
+},
+{
+"w": "celebration",
+"syl": "cel·e·bra·tion",
+"s": "We had a celebration for her birthday."
+},
+{
+"w": "direction",
+"syl": "di·rec·tion",
+"s": "Walk in the other direction."
+},
+{
+"w": "mission",
+"syl": "mis·sion",
+"s": "The team finished the mission."
+},
+{
+"w": "vacation",
+"syl": "va·ca·tion",
+"s": "We went to the beach on vacation."
+},
+{
+"w": "invention",
+"syl": "in·ven·tion",
+"s": "The light bulb was a great invention."
+},
+{
+"w": "profession",
+"syl": "pro·fes·sion",
+"s": "Teaching is a rewarding profession."
+},
+{
+"w": "action",
+"syl": "ac·tion",
+"s": "Take action and clean your room."
+},
+{
+"w": "addition",
+"syl": "ad·di·tion",
+"s": "We practiced addition in math."
+},
+{
+"w": "collection",
+"syl": "col·lec·tion",
+"s": "He has a coin collection."
+},
+{
+"w": "condition",
+"syl": "con·di·tion",
+"s": "The bike is in good condition."
+},
+{
+"w": "connection",
+"syl": "con·nec·tion",
+"s": "There is a strong connection between them."
+},
+{
+"w": "conversation",
+"syl": "con·ver·sa·tion",
+"s": "We had a nice conversation."
+},
+{
+"w": "description",
+"syl": "de·scrip·tion",
+"s": "Write a description of the animal."
+},
+{
+"w": "emotion",
+"syl": "e·mo·tion",
+"s": "She showed a lot of emotion."
+},
+{
+"w": "explanation",
+"syl": "ex·pla·na·tion",
+"s": "He gave a clear explanation."
+},
+{
+"w": "fraction",
+"syl": "frac·tion",
+"s": "One half is a fraction."
+},
+{
+"w": "imagination",
+"syl": "i·mag·i·na·tion",
+"s": "She has a big imagination."
+},
+{
+"w": "instruction",
+"syl": "in·struc·tion",
+"s": "Follow each instruction carefully."
+},
+{
+"w": "location",
+"syl": "lo·ca·tion",
+"s": "This is a great location for a park."
+},
+{
+"w": "nation",
+"syl": "na·tion",
+"s": "Our nation has fifty states."
+},
+{
+"w": "operation",
+"syl": "op·er·a·tion",
+"s": "The machine is back in operation."
+},
+{
+"w": "permission",
+"syl": "per·mis·sion",
+"s": "Ask permission before you leave."
+},
+{
+"w": "position",
+"syl": "po·si·tion",
+"s": "She plays the goalie position."
+},
+{
+"w": "question",
+"syl": "ques·tion",
+"s": "I have a question for the teacher."
+},
+{
+"w": "situation",
+"syl": "sit·u·a·tion",
+"s": "It was a tricky situation."
+},
+{
+"w": "solution",
+"syl": "so·lu·tion",
+"s": "We found a solution to the problem."
+},
+{
+"w": "station",
+"syl": "sta·tion",
+"s": "We waited at the train station."
+}
+]
+},
+{
+"id": "prefix",
+"emoji": "⬅️",
+"name": "Prefixes",
+"hint": "Beginnings like re-, un-, dis-, mis-, pre-.",
+"words": [
+{
+"w": "rebuild",
+"syl": "re·build",
+"s": "They will rebuild the old bridge."
+},
+{
+"w": "unhappy",
+"syl": "un·hap·py",
+"s": "He felt unhappy about the news."
+},
+{
+"w": "disappear",
+"syl": "dis·ap·pear",
+"s": "The coin seemed to disappear."
+},
+{
+"w": "mistake",
+"syl": "mis·take",
+"s": "Everyone makes a mistake sometimes."
+},
+{
+"w": "preview",
+"syl": "pre·view",
+"s": "We watched a preview of the movie."
+},
+{
+"w": "disagree",
+"syl": "dis·a·gree",
+"s": "The friends disagree about the game."
+},
+{
+"w": "misspell",
+"syl": "mis·spell",
+"s": "Try not to misspell your name."
+},
+{
+"w": "unusual",
+"syl": "un·u·su·al",
+"s": "That was an unusual sound."
+},
+{
+"w": "prepare",
+"syl": "pre·pare",
+"s": "We need to prepare for the test."
+},
+{
+"w": "rewrite",
+"syl": "re·write",
+"s": "She had to rewrite the messy page."
+},
+{
+"w": "dishonest",
+"syl": "dis·hon·est",
+"s": "It is wrong to be dishonest."
+},
+{
+"w": "predict",
+"syl": "pre·dict",
+"s": "Can you predict the weather?"
+},
+{
+"w": "review",
+"syl": "re·view",
+"s": "Let's review the words before the test."
+},
+{
+"w": "unfair",
+"syl": "un·fair",
+"s": "It felt unfair to skip her turn."
+},
+{
+"w": "replace",
+"syl": "re·place",
+"s": "Please replace the cap on the marker."
+},
+{
+"w": "return",
+"syl": "re·turn",
+"s": "Return the book to the shelf."
+},
+{
+"w": "remove",
+"syl": "re·move",
+"s": "Remove your shoes at the door."
+},
+{
+"w": "repeat",
+"syl": "re·peat",
+"s": "Could you repeat the question?"
+},
+{
+"w": "react",
+"syl": "re·act",
+"s": "How did the crowd react?"
+},
+{
+"w": "reread",
+"syl": "re·read",
+"s": "I had to reread the chapter."
+},
+{
+"w": "unable",
+"syl": "un·a·ble",
+"s": "She was unable to attend."
+},
+{
+"w": "unkind",
+"syl": "un·kind",
+"s": "It is unkind to tease."
+},
+{
+"w": "unlock",
+"syl": "un·lock",
+"s": "Use the key to unlock the door."
+},
+{
+"w": "unknown",
+"syl": "un·known",
+"s": "The cave led to an unknown place."
+},
+{
+"w": "untie",
+"syl": "un·tie",
+"s": "Help me untie this knot."
+},
+{
+"w": "discomfort",
+"syl": "dis·com·fort",
+"s": "The tight shoe caused discomfort."
+},
+{
+"w": "disorder",
+"syl": "dis·or·der",
+"s": "The room was in total disorder."
+},
+{
+"w": "dislike",
+"syl": "dis·like",
+"s": "I dislike cold soup."
+},
+{
+"w": "misbehave",
+"syl": "mis·be·have",
+"s": "The puppy began to misbehave."
+},
+{
+"w": "mislead",
+"syl": "mis·lead",
+"s": "A bad map can mislead you."
+},
+{
+"w": "misplace",
+"syl": "mis·place",
+"s": "Try not to misplace your keys."
+},
+{
+"w": "preheat",
+"syl": "pre·heat",
+"s": "Preheat the oven before baking."
+},
+{
+"w": "prepay",
+"syl": "pre·pay",
+"s": "You can prepay for lunch."
+},
+{
+"w": "pretest",
+"syl": "pre·test",
+"s": "We took a pretest on Monday."
+},
+{
+"w": "uncover",
+"syl": "un·cov·er",
+"s": "We will uncover the truth."
+}
+]
+},
+{
+"id": "suffix",
+"emoji": "➡️",
+"name": "Suffixes",
+"hint": "Endings like -able, -ous, -ly, -ment, -ness.",
+"words": [
+{
+"w": "comfortable",
+"syl": "com·fort·a·ble",
+"s": "This chair is very comfortable."
+},
+{
+"w": "valuable",
+"syl": "val·u·a·ble",
+"s": "The old coin was valuable."
+},
+{
+"w": "terrible",
+"syl": "ter·ri·ble",
+"s": "The storm caused terrible damage."
+},
+{
+"w": "possible",
+"syl": "pos·si·ble",
+"s": "It is possible to finish in time."
+},
+{
+"w": "movement",
+"syl": "move·ment",
+"s": "The dancer made a graceful movement."
+},
+{
+"w": "government",
+"syl": "gov·ern·ment",
+"s": "The government built a new park."
+},
+{
+"w": "agreement",
+"syl": "a·gree·ment",
+"s": "They came to an agreement."
+},
+{
+"w": "quickly",
+"syl": "quick·ly",
+"s": "She ran quickly to the bus."
+},
+{
+"w": "carefully",
+"syl": "care·ful·ly",
+"s": "Carry the glass carefully."
+},
+{
+"w": "famous",
+"syl": "fa·mous",
+"s": "The author is very famous."
+},
+{
+"w": "dangerous",
+"syl": "dan·ger·ous",
+"s": "Crossing there is dangerous."
+},
+{
+"w": "nervous",
+"syl": "ner·vous",
+"s": "He felt nervous before the play."
+},
+{
+"w": "enjoyable",
+"syl": "en·joy·a·ble",
+"s": "The trip was very enjoyable."
+},
+{
+"w": "sensible",
+"syl": "sen·si·ble",
+"s": "That was a sensible choice."
+},
+{
+"w": "horrible",
+"syl": "hor·ri·ble",
+"s": "The smell was horrible."
+},
+{
+"w": "visible",
+"syl": "vis·i·ble",
+"s": "The stars were clearly visible."
+},
+{
+"w": "payment",
+"syl": "pay·ment",
+"s": "She made the final payment."
+},
+{
+"w": "statement",
+"syl": "state·ment",
+"s": "He read his statement aloud."
+},
+{
+"w": "treatment",
+"syl": "treat·ment",
+"s": "The plant needs special treatment."
+},
+{
+"w": "friendly",
+"syl": "friend·ly",
+"s": "Our neighbor is very friendly."
+},
+{
+"w": "lonely",
+"syl": "lone·ly",
+"s": "The puppy looked lonely."
+},
+{
+"w": "safely",
+"syl": "safe·ly",
+"s": "We crossed the street safely."
+},
+{
+"w": "joyful",
+"syl": "joy·ful",
+"s": "It was a joyful celebration."
+},
+{
+"w": "helpful",
+"syl": "help·ful",
+"s": "Thank you for being so helpful."
+},
+{
+"w": "hopeful",
+"syl": "hope·ful",
+"s": "She felt hopeful about the test."
+},
+{
+"w": "peaceful",
+"syl": "peace·ful",
+"s": "The lake was calm and peaceful."
+},
+{
+"w": "careless",
+"syl": "care·less",
+"s": "A careless mistake cost the game."
+},
+{
+"w": "helpless",
+"syl": "help·less",
+"s": "The kitten looked helpless."
+},
+{
+"w": "fearless",
+"syl": "fear·less",
+"s": "The diver was fearless."
+},
+{
+"w": "darkness",
+"syl": "dark·ness",
+"s": "We could not see in the darkness."
+},
+{
+"w": "kindness",
+"syl": "kind·ness",
+"s": "Her kindness made everyone smile."
+},
+{
+"w": "sadness",
+"syl": "sad·ness",
+"s": "A feeling of sadness filled the room."
+},
+{
+"w": "weakness",
+"syl": "weak·ness",
+"s": "Resting helps after weakness."
+},
+{
+"w": "illness",
+"syl": "ill·ness",
+"s": "He missed school due to illness."
+},
+{
+"w": "jealous",
+"syl": "jeal·ous",
+"s": "She felt jealous of the prize."
+},
+{
+"w": "curious",
+"syl": "cu·ri·ous",
+"s": "The curious cat sniffed the box."
+},
+{
+"w": "generous",
+"syl": "gen·er·ous",
+"s": "It was a generous gift."
+},
+{
+"w": "wonderful",
+"syl": "won·der·ful",
+"s": "We had a wonderful time."
+},
+{
+"w": "successful",
+"syl": "suc·cess·ful",
+"s": "The launch was successful."
+},
+{
+"w": "powerful",
+"syl": "pow·er·ful",
+"s": "The storm was very powerful."
+}
+]
+},
+{
+"id": "ieei",
+"emoji": "🔤",
+"name": "ie / ei Words",
+"hint": "The tricky 'i before e' rule and its exceptions.",
+"words": [
+{
+"w": "believe",
+"syl": "be·lieve",
+"s": "I believe you can do it."
+},
+{
+"w": "receive",
+"syl": "re·ceive",
+"s": "Did you receive my letter?"
+},
+{
+"w": "achieve",
+"syl": "a·chieve",
+"s": "Work hard to achieve your goals."
+},
+{
+"w": "field",
+"syl": "field",
+"s": "The cows grazed in the field."
+},
+{
+"w": "ceiling",
+"syl": "ceil·ing",
+"s": "There is a crack in the ceiling."
+},
+{
+"w": "neighbor",
+"syl": "neigh·bor",
+"s": "Our neighbor has a friendly cat."
+},
+{
+"w": "weird",
+"syl": "weird",
+"s": "I heard a weird noise."
+},
+{
+"w": "piece",
+"syl": "piece",
+"s": "Can I have a piece of cake?"
+},
+{
+"w": "niece",
+"syl": "niece",
+"s": "My niece is three years old."
+},
+{
+"w": "relief",
+"syl": "re·lief",
+"s": "It was a relief when the test ended."
+},
+{
+"w": "brief",
+"syl": "brief",
+"s": "She gave a brief speech."
+},
+{
+"w": "science",
+"syl": "sci·ence",
+"s": "We did a science experiment."
+},
+{
+"w": "height",
+"syl": "height",
+"s": "Measure the height of the wall."
+},
+{
+"w": "chief",
+"syl": "chief",
+"s": "The fire chief gave a talk."
+},
+{
+"w": "thief",
+"syl": "thief",
+"s": "The thief took the bag."
+},
+{
+"w": "grief",
+"syl": "grief",
+"s": "They shared their grief together."
+},
+{
+"w": "shield",
+"syl": "shield",
+"s": "The knight raised his shield."
+},
+{
+"w": "deceive",
+"syl": "de·ceive",
+"s": "A magician can deceive your eyes."
+},
+{
+"w": "receipt",
+"syl": "re·ceipt",
+"s": "Keep the receipt for the store."
+},
+{
+"w": "eight",
+"syl": "eight",
+"s": "There are eight slices of pizza."
+},
+{
+"w": "weigh",
+"syl": "weigh",
+"s": "Let's weigh the apples."
+},
+{
+"w": "either",
+"syl": "ei·ther",
+"s": "You can have either color."
+},
+{
+"w": "neither",
+"syl": "nei·ther",
+"s": "Neither answer was correct."
+},
+{
+"w": "seize",
+"syl": "seize",
+"s": "The dog tried to seize the ball."
+},
+{
+"w": "priest",
+"syl": "priest",
+"s": "The priest spoke to the crowd."
+},
+{
+"w": "fierce",
+"syl": "fierce",
+"s": "The fierce wind bent the trees."
+},
+{
+"w": "mischief",
+"syl": "mis·chief",
+"s": "The puppy got into mischief."
+},
+{
+"w": "yield",
+"syl": "yield",
+"s": "Cars must yield at the sign."
+}
+]
+},
+{
+"id": "homo",
+"emoji": "👯",
+"name": "Sound-Alike Words",
+"hint": "Words that sound the same but are spelled differently. Listen to the sentence!",
+"words": [
+{
+"w": "their",
+"syl": "their",
+"s": "The students raised their hands.",
+"ctx": true
+},
+{
+"w": "there",
+"syl": "there",
+"s": "Please put the box over there.",
+"ctx": true
+},
+{
+"w": "they're",
+"syl": "they're",
+"s": "They're going to the park later.",
+"ctx": true
+},
+{
+"w": "your",
+"syl": "your",
+"s": "Is this your backpack?",
+"ctx": true
+},
+{
+"w": "you're",
+"syl": "you're",
+"s": "You're doing a great job.",
+"ctx": true
+},
+{
+"w": "its",
+"syl": "its",
+"s": "The dog wagged its tail.",
+"ctx": true
+},
+{
+"w": "it's",
+"syl": "it's",
+"s": "It's a sunny day today.",
+"ctx": true
+},
+{
+"w": "too",
+"syl": "too",
+"s": "I want to come too.",
+"ctx": true
+},
+{
+"w": "two",
+"syl": "two",
+"s": "I have two cats.",
+"ctx": true
+},
+{
+"w": "to",
+"syl": "to",
+"s": "We walked to the store.",
+"ctx": true
+},
+{
+"w": "weather",
+"syl": "weath·er",
+"s": "The weather is warm today.",
+"ctx": true
+},
+{
+"w": "whether",
+"syl": "wheth·er",
+"s": "I can't decide whether to go.",
+"ctx": true
+},
+{
+"w": "principal",
+"syl": "prin·ci·pal",
+"s": "The principal leads the school.",
+"ctx": true
+},
+{
+"w": "principle",
+"syl": "prin·ci·ple",
+"s": "Honesty is an important principle.",
+"ctx": true
+},
+{
+"w": "hear",
+"syl": "hear",
+"s": "Can you hear the music?",
+"ctx": true
+},
+{
+"w": "here",
+"syl": "here",
+"s": "Come sit over here.",
+"ctx": true
+},
+{
+"w": "knew",
+"syl": "knew",
+"s": "She knew the answer right away.",
+"ctx": true
+},
+{
+"w": "new",
+"syl": "new",
+"s": "I got a new pair of shoes.",
+"ctx": true
+},
+{
+"w": "know",
+"syl": "know",
+"s": "Do you know the time?",
+"ctx": true
+},
+{
+"w": "no",
+"syl": "no",
+"s": "There is no milk left.",
+"ctx": true
+},
+{
+"w": "right",
+"syl": "right",
+"s": "Turn right at the corner.",
+"ctx": true
+},
+{
+"w": "would",
+"syl": "would",
+"s": "I would love some juice.",
+"ctx": true
+},
+{
+"w": "wood",
+"syl": "wood",
+"s": "The table is made of wood.",
+"ctx": true
+},
+{
+"w": "buy",
+"syl": "buy",
+"s": "Let's buy some bread.",
+"ctx": true
+},
+{
+"w": "by",
+"syl": "by",
+"s": "She sat by the window.",
+"ctx": true
+},
+{
+"w": "plain",
+"syl": "plain",
+"s": "He wore a plain white shirt.",
+"ctx": true
+},
+{
+"w": "plane",
+"syl": "plane",
+"s": "The plane landed on time.",
+"ctx": true
+},
+{
+"w": "road",
+"syl": "road",
+"s": "We drove down a bumpy road.",
+"ctx": true
+},
+{
+"w": "rode",
+"syl": "rode",
+"s": "She rode her bike to school.",
+"ctx": true
+},
+{
+"w": "sea",
+"syl": "sea",
+"s": "We swam in the sea.",
+"ctx": true
+},
+{
+"w": "see",
+"syl": "see",
+"s": "I can see the mountains.",
+"ctx": true
+},
+{
+"w": "son",
+"syl": "son",
+"s": "Her son is in fourth grade.",
+"ctx": true
+},
+{
+"w": "sun",
+"syl": "sun",
+"s": "The sun is bright today.",
+"ctx": true
+},
+{
+"w": "flour",
+"syl": "flour",
+"s": "Add flour to the cookie dough.",
+"ctx": true
+}
+]
+},
+{
+"id": "plural",
+"emoji": "➕",
+"name": "Plurals & Endings",
+"hint": "Making words mean 'more than one.'",
+"words": [
+{
+"w": "babies",
+"syl": "ba·bies",
+"s": "The babies are sleeping."
+},
+{
+"w": "families",
+"syl": "fam·i·lies",
+"s": "Many families came to the fair."
+},
+{
+"w": "libraries",
+"syl": "li·brar·ies",
+"s": "The town has two libraries."
+},
+{
+"w": "dictionaries",
+"syl": "dic·tion·ar·ies",
+"s": "We used the dictionaries in class."
+},
+{
+"w": "knives",
+"syl": "knives",
+"s": "Keep the knives in the drawer."
+},
+{
+"w": "leaves",
+"syl": "leaves",
+"s": "The leaves fell from the tree."
+},
+{
+"w": "potatoes",
+"syl": "po·ta·toes",
+"s": "We baked the potatoes."
+},
+{
+"w": "tomatoes",
+"syl": "to·ma·toes",
+"s": "The tomatoes are red and ripe."
+},
+{
+"w": "children",
+"syl": "chil·dren",
+"s": "The children played outside."
+},
+{
+"w": "women",
+"syl": "wom·en",
+"s": "The women ran in the race."
+},
+{
+"w": "heroes",
+"syl": "he·roes",
+"s": "Firefighters are real heroes."
+},
+{
+"w": "countries",
+"syl": "coun·tries",
+"s": "We studied three countries."
+},
+{
+"w": "batteries",
+"syl": "bat·ter·ies",
+"s": "The remote needs new batteries."
+},
+{
+"w": "mice",
+"syl": "mice",
+"s": "The cat chased the mice."
+},
+{
+"w": "wolves",
+"syl": "wolves",
+"s": "The wolves howled at night."
+},
+{
+"w": "shelves",
+"syl": "shelves",
+"s": "The shelves are full of books."
+},
+{
+"w": "loaves",
+"syl": "loaves",
+"s": "We bought two loaves of bread."
+},
+{
+"w": "halves",
+"syl": "halves",
+"s": "Cut the orange into halves."
+},
+{
+"w": "cities",
+"syl": "cit·ies",
+"s": "We visited two big cities."
+},
+{
+"w": "stories",
+"syl": "sto·ries",
+"s": "Grandpa tells the best stories."
+},
+{
+"w": "parties",
+"syl": "par·ties",
+"s": "We went to two parties."
+},
+{
+"w": "berries",
+"syl": "ber·ries",
+"s": "The berries are sweet."
+},
+{
+"w": "boxes",
+"syl": "box·es",
+"s": "Stack the boxes by the door."
+},
+{
+"w": "dishes",
+"syl": "dish·es",
+"s": "Please wash the dishes."
+},
+{
+"w": "brushes",
+"syl": "brush·es",
+"s": "We have three paint brushes."
+},
+{
+"w": "glasses",
+"syl": "glass·es",
+"s": "She wears glasses to read."
+},
+{
+"w": "watches",
+"syl": "watch·es",
+"s": "The store sells watches."
+},
+{
+"w": "geese",
+"syl": "geese",
+"s": "The geese flew south."
+},
+{
+"w": "feet",
+"syl": "feet",
+"s": "My feet are tired."
+},
+{
+"w": "teeth",
+"syl": "teeth",
+"s": "Brush your teeth before bed."
+}
+]
+},
+{
+"id": "big",
+"emoji": "🧩",
+"name": "Bigger & Compound Words",
+"hint": "Longer words made of smaller parts.",
+"words": [
+{
+"w": "everything",
+"syl": "eve·ry·thing",
+"s": "She packed everything in one bag."
+},
+{
+"w": "sometimes",
+"syl": "some·times",
+"s": "Sometimes we walk to school."
+},
+{
+"w": "basketball",
+"syl": "bas·ket·ball",
+"s": "We played basketball at recess."
+},
+{
+"w": "themselves",
+"syl": "them·selves",
+"s": "They made lunch by themselves."
+},
+{
+"w": "throughout",
+"syl": "through·out",
+"s": "It rained throughout the night."
+},
+{
+"w": "underground",
+"syl": "un·der·ground",
+"s": "The train travels underground."
+},
+{
+"w": "grandmother",
+"syl": "grand·moth·er",
+"s": "My grandmother bakes cookies."
+},
+{
+"w": "breakfast",
+"syl": "break·fast",
+"s": "We eat breakfast at seven."
+},
+{
+"w": "afternoon",
+"syl": "af·ter·noon",
+"s": "We have art in the afternoon."
+},
+{
+"w": "playground",
+"syl": "play·ground",
+"s": "The kids ran to the playground."
+},
+{
+"w": "somebody",
+"syl": "some·bod·y",
+"s": "Somebody left a note on the desk."
+},
+{
+"w": "understand",
+"syl": "un·der·stand",
+"s": "I understand the directions now."
+},
+{
+"w": "background",
+"syl": "back·ground",
+"s": "The mountains were in the background."
+},
+{
+"w": "earthquake",
+"syl": "earth·quake",
+"s": "The earthquake shook the ground."
+},
+{
+"w": "anybody",
+"syl": "an·y·bod·y",
+"s": "Did anybody see my pencil?"
+},
+{
+"w": "anything",
+"syl": "an·y·thing",
+"s": "Is there anything to eat?"
+},
+{
+"w": "anywhere",
+"syl": "an·y·where",
+"s": "We can sit anywhere we like."
+},
+{
+"w": "butterfly",
+"syl": "but·ter·fly",
+"s": "A butterfly landed on the flower."
+},
+{
+"w": "classroom",
+"syl": "class·room",
+"s": "Our classroom has a reading corner."
+},
+{
+"w": "downstairs",
+"syl": "down·stairs",
+"s": "The kitchen is downstairs."
+},
+{
+"w": "everybody",
+"syl": "eve·ry·bod·y",
+"s": "Everybody clapped at the end."
+},
+{
+"w": "everywhere",
+"syl": "eve·ry·where",
+"s": "There were balloons everywhere."
+},
+{
+"w": "flashlight",
+"syl": "flash·light",
+"s": "Bring a flashlight on the hike."
+},
+{
+"w": "football",
+"syl": "foot·ball",
+"s": "We tossed the football outside."
+},
+{
+"w": "grandfather",
+"syl": "grand·fa·ther",
+"s": "My grandfather tells funny jokes."
+},
+{
+"w": "homework",
+"syl": "home·work",
+"s": "I finished my homework early."
+},
+{
+"w": "newspaper",
+"syl": "news·pa·per",
+"s": "Dad reads the newspaper."
+},
+{
+"w": "nobody",
+"syl": "no·bod·y",
+"s": "Nobody was home."
+},
+{
+"w": "notebook",
+"syl": "note·book",
+"s": "Write it in your notebook."
+},
+{
+"w": "outside",
+"syl": "out·side",
+"s": "Let's play outside."
+},
+{
+"w": "popcorn",
+"syl": "pop·corn",
+"s": "We made popcorn for the movie."
+},
+{
+"w": "rainbow",
+"syl": "rain·bow",
+"s": "A rainbow appeared after the storm."
+},
+{
+"w": "sidewalk",
+"syl": "side·walk",
+"s": "We chalked on the sidewalk."
+},
+{
+"w": "sunshine",
+"syl": "sun·shine",
+"s": "The garden needs sunshine."
+},
+{
+"w": "weekend",
+"syl": "week·end",
+"s": "We relax on the weekend."
+}
+]
+},
+{
+"id": "vowel",
+"emoji": "🌊",
+"name": "Vowel Teams & Long Vowels",
+"hint": "Two vowels working together to make one sound.",
+"words": [
+{
+"w": "mountain",
+"syl": "moun·tain",
+"s": "We hiked up the mountain."
+},
+{
+"w": "fountain",
+"syl": "foun·tain",
+"s": "The park has a water fountain."
+},
+{
+"w": "complain",
+"syl": "com·plain",
+"s": "Try not to complain about chores."
+},
+{
+"w": "explain",
+"syl": "ex·plain",
+"s": "Can you explain the rule?"
+},
+{
+"w": "remain",
+"syl": "re·main",
+"s": "Please remain in your seat."
+},
+{
+"w": "brain",
+"syl": "brain",
+"s": "Your brain helps you learn."
+},
+{
+"w": "coach",
+"syl": "coach",
+"s": "The coach blew the whistle."
+},
+{
+"w": "throat",
+"syl": "throat",
+"s": "My throat feels sore."
+},
+{
+"w": "float",
+"syl": "float",
+"s": "The boat began to float."
+},
+{
+"w": "coast",
+"syl": "coast",
+"s": "We walked along the coast."
+},
+{
+"w": "toast",
+"syl": "toast",
+"s": "I had toast for breakfast."
+},
+{
+"w": "agree",
+"syl": "a·gree",
+"s": "We all agree on the plan."
+},
+{
+"w": "degree",
+"syl": "de·gree",
+"s": "The angle is ninety degrees."
+},
+{
+"w": "between",
+"syl": "be·tween",
+"s": "Sit between your two friends."
+},
+{
+"w": "fifteen",
+"syl": "fif·teen",
+"s": "There are fifteen students here."
+},
+{
+"w": "sixteen",
+"syl": "six·teen",
+"s": "She is sixteen years old."
+},
+{
+"w": "eighteen",
+"syl": "eigh·teen",
+"s": "The team scored eighteen points."
+},
+{
+"w": "freedom",
+"syl": "free·dom",
+"s": "They celebrated their freedom."
+},
+{
+"w": "increase",
+"syl": "in·crease",
+"s": "Let's increase the speed."
+},
+{
+"w": "season",
+"syl": "sea·son",
+"s": "Winter is my favorite season."
+},
+{
+"w": "reason",
+"syl": "rea·son",
+"s": "Give a reason for your answer."
+},
+{
+"w": "beneath",
+"syl": "be·neath",
+"s": "The cat hid beneath the bed."
+},
+{
+"w": "breeze",
+"syl": "breeze",
+"s": "A cool breeze blew by."
+},
+{
+"w": "sneeze",
+"syl": "sneeze",
+"s": "Cover your mouth when you sneeze."
+},
+{
+"w": "squeeze",
+"syl": "squeeze",
+"s": "Squeeze the lemon over the fish."
+},
+{
+"w": "praise",
+"syl": "praise",
+"s": "The teacher gave her praise."
+},
+{
+"w": "holiday",
+"syl": "hol·i·day",
+"s": "We baked cookies for the holiday."
+},
+{
+"w": "railroad",
+"syl": "rail·road",
+"s": "The railroad runs past town."
+},
+{
+"w": "mailbox",
+"syl": "mail·box",
+"s": "Check the mailbox for letters."
+},
+{
+"w": "daisy",
+"syl": "dai·sy",
+"s": "She picked a white daisy."
+}
+]
+},
+{
+"id": "rcontrol",
+"emoji": "🐾",
+"name": "R-Controlled Words",
+"hint": "The vowel sound changes when an r follows it.",
+"words": [
+{
+"w": "garden",
+"syl": "gar·den",
+"s": "We planted seeds in the garden."
+},
+{
+"w": "market",
+"syl": "mar·ket",
+"s": "We shopped at the market."
+},
+{
+"w": "partner",
+"syl": "part·ner",
+"s": "Choose a partner for the game."
+},
+{
+"w": "harvest",
+"syl": "har·vest",
+"s": "Fall is the time for harvest."
+},
+{
+"w": "sharp",
+"syl": "sharp",
+"s": "Be careful, the knife is sharp."
+},
+{
+"w": "alarm",
+"syl": "a·larm",
+"s": "The alarm woke me up."
+},
+{
+"w": "charge",
+"syl": "charge",
+"s": "Please charge the tablet."
+},
+{
+"w": "mother",
+"syl": "moth·er",
+"s": "My mother makes great soup."
+},
+{
+"w": "father",
+"syl": "fa·ther",
+"s": "My father drives a truck."
+},
+{
+"w": "brother",
+"syl": "broth·er",
+"s": "My brother is taller than me."
+},
+{
+"w": "sister",
+"syl": "sis·ter",
+"s": "My sister plays the flute."
+},
+{
+"w": "winter",
+"syl": "win·ter",
+"s": "We sled in the winter."
+},
+{
+"w": "teacher",
+"syl": "teach·er",
+"s": "Our teacher is very kind."
+},
+{
+"w": "number",
+"syl": "num·ber",
+"s": "Write your favorite number."
+},
+{
+"w": "corner",
+"syl": "cor·ner",
+"s": "The store is on the corner."
+},
+{
+"w": "morning",
+"syl": "morn·ing",
+"s": "I read every morning."
+},
+{
+"w": "important",
+"syl": "im·por·tant",
+"s": "It is important to be kind."
+},
+{
+"w": "forest",
+"syl": "for·est",
+"s": "We camped in the forest."
+},
+{
+"w": "forget",
+"syl": "for·get",
+"s": "Don't forget your lunch."
+},
+{
+"w": "thirsty",
+"syl": "thirst·y",
+"s": "Running made me thirsty."
+},
+{
+"w": "birthday",
+"syl": "birth·day",
+"s": "Today is her birthday."
+},
+{
+"w": "circle",
+"syl": "cir·cle",
+"s": "Draw a big circle."
+},
+{
+"w": "first",
+"syl": "first",
+"s": "She finished first in the race."
+},
+{
+"w": "turtle",
+"syl": "tur·tle",
+"s": "The turtle moved slowly."
+},
+{
+"w": "purple",
+"syl": "pur·ple",
+"s": "Her shirt is bright purple."
+},
+{
+"w": "danger",
+"syl": "dan·ger",
+"s": "Keep away from danger."
+},
+{
+"w": "perfect",
+"syl": "per·fect",
+"s": "She drew a perfect circle."
+},
+{
+"w": "thunder",
+"syl": "thun·der",
+"s": "We heard loud thunder."
+},
+{
+"w": "water",
+"syl": "wa·ter",
+"s": "Please water the plants."
+}
+]
+},
+{
+"id": "contract",
+"emoji": "✂️",
+"name": "Contractions",
+"hint": "Two words joined with an apostrophe. Listen for the missing letters!",
+"words": [
+{
+"w": "don't",
+"syl": "don't",
+"s": "I don't like cold soup.",
+"ctx": true
+},
+{
+"w": "can't",
+"syl": "can't",
+"s": "She can't find her shoes.",
+"ctx": true
+},
+{
+"w": "won't",
+"syl": "won't",
+"s": "The door won't open.",
+"ctx": true
+},
+{
+"w": "didn't",
+"syl": "did·n't",
+"s": "He didn't finish his lunch.",
+"ctx": true
+},
+{
+"w": "doesn't",
+"syl": "does·n't",
+"s": "It doesn't fit in the bag.",
+"ctx": true
+},
+{
+"w": "isn't",
+"syl": "is·n't",
+"s": "This isn't my pencil.",
+"ctx": true
+},
+{
+"w": "aren't",
+"syl": "are·n't",
+"s": "They aren't ready yet.",
+"ctx": true
+},
+{
+"w": "wasn't",
+"syl": "was·n't",
+"s": "It wasn't my turn.",
+"ctx": true
+},
+{
+"w": "weren't",
+"syl": "were·n't",
+"s": "We weren't at home.",
+"ctx": true
+},
+{
+"w": "haven't",
+"syl": "have·n't",
+"s": "I haven't seen that movie.",
+"ctx": true
+},
+{
+"w": "hasn't",
+"syl": "has·n't",
+"s": "She hasn't called back.",
+"ctx": true
+},
+{
+"w": "hadn't",
+"syl": "had·n't",
+"s": "He hadn't packed his bag.",
+"ctx": true
+},
+{
+"w": "wouldn't",
+"syl": "would·n't",
+"s": "The cat wouldn't come down.",
+"ctx": true
+},
+{
+"w": "shouldn't",
+"syl": "should·n't",
+"s": "You shouldn't run inside.",
+"ctx": true
+},
+{
+"w": "couldn't",
+"syl": "could·n't",
+"s": "I couldn't reach the shelf.",
+"ctx": true
+},
+{
+"w": "I'm",
+"syl": "I'm",
+"s": "I'm so happy to see you.",
+"ctx": true
+},
+{
+"w": "I'll",
+"syl": "I'll",
+"s": "I'll meet you after school.",
+"ctx": true
+},
+{
+"w": "I've",
+"syl": "I've",
+"s": "I've finished my homework.",
+"ctx": true
+},
+{
+"w": "we're",
+"syl": "we're",
+"s": "We're going to the zoo.",
+"ctx": true
+},
+{
+"w": "we'll",
+"syl": "we'll",
+"s": "We'll be there at noon.",
+"ctx": true
+},
+{
+"w": "they'll",
+"syl": "they'll",
+"s": "They'll arrive on Saturday.",
+"ctx": true
+},
+{
+"w": "that's",
+"syl": "that's",
+"s": "That's a great idea.",
+"ctx": true
+},
+{
+"w": "what's",
+"syl": "what's",
+"s": "What's for dinner tonight?",
+"ctx": true
+},
+{
+"w": "let's",
+"syl": "let's",
+"s": "Let's go to the park.",
+"ctx": true
+},
+{
+"w": "who's",
+"syl": "who's",
+"s": "Who's coming to the party?",
+"ctx": true
+},
+{
+"w": "you'll",
+"syl": "you'll",
+"s": "You'll enjoy this book.",
+"ctx": true
+},
+{
+"w": "he's",
+"syl": "he's",
+"s": "He's my best friend.",
+"ctx": true
+},
+{
+"w": "she's",
+"syl": "she's",
+"s": "She's reading in the corner.",
+"ctx": true
+}
+]
+},
+{
+"id": "academic",
+"emoji": "🔬",
+"name": "Science & Social Studies Words",
+"hint": "Useful words from school subjects.",
+"words": [
+{
+"w": "environment",
+"syl": "en·vi·ron·ment",
+"s": "We must protect the environment."
+},
+{
+"w": "experiment",
+"syl": "ex·per·i·ment",
+"s": "We did a fun experiment."
+},
+{
+"w": "energy",
+"syl": "en·er·gy",
+"s": "The sun gives us energy."
+},
+{
+"w": "gravity",
+"syl": "grav·i·ty",
+"s": "Gravity pulls things down."
+},
+{
+"w": "planet",
+"syl": "plan·et",
+"s": "Earth is our home planet."
+},
+{
+"w": "system",
+"syl": "sys·tem",
+"s": "The solar system has eight planets."
+},
+{
+"w": "climate",
+"syl": "cli·mate",
+"s": "The desert has a dry climate."
+},
+{
+"w": "mineral",
+"syl": "min·er·al",
+"s": "Salt is a kind of mineral."
+},
+{
+"w": "organism",
+"syl": "or·gan·ism",
+"s": "An ant is a tiny organism."
+},
+{
+"w": "oxygen",
+"syl": "ox·y·gen",
+"s": "We need oxygen to breathe."
+},
+{
+"w": "molecule",
+"syl": "mol·e·cule",
+"s": "Water is a tiny molecule."
+},
+{
+"w": "temperature",
+"syl": "tem·per·a·ture",
+"s": "Check the temperature outside."
+},
+{
+"w": "electricity",
+"syl": "e·lec·tric·i·ty",
+"s": "Lightning is a form of electricity."
+},
+{
+"w": "magnet",
+"syl": "mag·net",
+"s": "The magnet stuck to the fridge."
+},
+{
+"w": "predator",
+"syl": "pred·a·tor",
+"s": "A lion is a predator."
+},
+{
+"w": "habitat",
+"syl": "hab·i·tat",
+"s": "The forest is their habitat."
+},
+{
+"w": "species",
+"syl": "spe·cies",
+"s": "We studied a rare species."
+},
+{
+"w": "skeleton",
+"syl": "skel·e·ton",
+"s": "A skeleton holds the body up."
+},
+{
+"w": "muscle",
+"syl": "mus·cle",
+"s": "Your heart is a strong muscle."
+},
+{
+"w": "volcano",
+"syl": "vol·ca·no",
+"s": "The volcano erupted long ago."
+},
+{
+"w": "citizen",
+"syl": "cit·i·zen",
+"s": "A good citizen helps others."
+},
+{
+"w": "continent",
+"syl": "con·ti·nent",
+"s": "Africa is a large continent."
+},
+{
+"w": "culture",
+"syl": "cul·ture",
+"s": "We learned about Japanese culture."
+},
+{
+"w": "economy",
+"syl": "e·con·o·my",
+"s": "Farming helps the economy."
+},
+{
+"w": "geography",
+"syl": "ge·og·ra·phy",
+"s": "We study maps in geography."
+},
+{
+"w": "history",
+"syl": "his·to·ry",
+"s": "I love reading about history."
+},
+{
+"w": "ancient",
+"syl": "an·cient",
+"s": "We learned about ancient Egypt."
+},
+{
+"w": "century",
+"syl": "cen·tu·ry",
+"s": "A century is one hundred years."
+},
+{
+"w": "colony",
+"syl": "col·o·ny",
+"s": "The ants built a colony."
+},
+{
+"w": "democracy",
+"syl": "de·moc·ra·cy",
+"s": "People vote in a democracy."
+},
+{
+"w": "explorer",
+"syl": "ex·plor·er",
+"s": "The explorer mapped the river."
+},
+{
+"w": "independence",
+"syl": "in·de·pend·ence",
+"s": "They celebrated their independence."
+},
+{
+"w": "region",
+"syl": "re·gion",
+"s": "Cactus grows in that region."
+},
+{
+"w": "republic",
+"syl": "re·pub·lic",
+"s": "A republic is a kind of government."
+},
+{
+"w": "settler",
+"syl": "set·tler",
+"s": "The settler built a log cabin."
+},
+{
+"w": "society",
+"syl": "so·ci·e·ty",
+"s": "Rules help our society."
+},
+{
+"w": "territory",
+"syl": "ter·ri·to·ry",
+"s": "The wolf guards its territory."
+},
+{
+"w": "ecosystem",
+"syl": "ec·o·sys·tem",
+"s": "A pond is a small ecosystem."
+},
+{
+"w": "atmosphere",
+"syl": "at·mos·phere",
+"s": "Clouds float in the atmosphere."
+},
+{
+"w": "fossil",
+"syl": "fos·sil",
+"s": "We found a dinosaur fossil."
+}
+]
+},
+{
+"id": "measure",
+"emoji": "🔢",
+"name": "Time, Number & Measuring",
+"hint": "Words for counting, time, and measuring.",
+"words": [
+{
+"w": "hundred",
+"syl": "hun·dred",
+"s": "There are one hundred pennies in a dollar."
+},
+{
+"w": "thousand",
+"syl": "thou·sand",
+"s": "A thousand stars filled the sky."
+},
+{
+"w": "million",
+"syl": "mil·lion",
+"s": "The city has over a million people."
+},
+{
+"w": "dozen",
+"syl": "doz·en",
+"s": "We bought a dozen eggs."
+},
+{
+"w": "fourth",
+"syl": "fourth",
+"s": "She came in fourth place."
+},
+{
+"w": "fifth",
+"syl": "fifth",
+"s": "He is in fifth grade."
+},
+{
+"w": "sixth",
+"syl": "sixth",
+"s": "Today is the sixth of June."
+},
+{
+"w": "seventh",
+"syl": "sev·enth",
+"s": "July is the seventh month."
+},
+{
+"w": "eighth",
+"syl": "eighth",
+"s": "This is my eighth try."
+},
+{
+"w": "ninth",
+"syl": "ninth",
+"s": "She finished in ninth place."
+},
+{
+"w": "tenth",
+"syl": "tenth",
+"s": "This is our tenth game."
+},
+{
+"w": "twelfth",
+"syl": "twelfth",
+"s": "December is the twelfth month."
+},
+{
+"w": "twenty",
+"syl": "twen·ty",
+"s": "I counted twenty marbles."
+},
+{
+"w": "thirty",
+"syl": "thir·ty",
+"s": "There are thirty days in June."
+},
+{
+"w": "forty",
+"syl": "for·ty",
+"s": "Grandpa is forty years old."
+},
+{
+"w": "fifty",
+"syl": "fif·ty",
+"s": "She read fifty pages."
+},
+{
+"w": "eighty",
+"syl": "eigh·ty",
+"s": "The book has eighty chapters."
+},
+{
+"w": "ninety",
+"syl": "nine·ty",
+"s": "He is almost ninety."
+},
+{
+"w": "minute",
+"syl": "min·ute",
+"s": "Wait just one minute."
+},
+{
+"w": "second",
+"syl": "sec·ond",
+"s": "I'll be ready in a second."
+},
+{
+"w": "decade",
+"syl": "dec·ade",
+"s": "A decade is ten years."
+},
+{
+"w": "month",
+"syl": "month",
+"s": "June is my favorite month."
+},
+{
+"w": "January",
+"syl": "Jan·u·ar·y",
+"s": "The year starts in January."
+},
+{
+"w": "December",
+"syl": "De·cem·ber",
+"s": "Winter break is in December."
+},
+{
+"w": "schedule",
+"syl": "sched·ule",
+"s": "Check the bus schedule."
+},
+{
+"w": "measure",
+"syl": "meas·ure",
+"s": "Use a ruler to measure it."
+},
+{
+"w": "length",
+"syl": "length",
+"s": "Find the length of the table."
+},
+{
+"w": "distance",
+"syl": "dis·tance",
+"s": "The distance is two miles."
+},
+{
+"w": "dollar",
+"syl": "dol·lar",
+"s": "The snack costs one dollar."
+},
+{
+"w": "ounce",
+"syl": "ounce",
+"s": "Add one ounce of water."
+},
+{
+"w": "quarter",
+"syl": "quar·ter",
+"s": "A quarter is twenty-five cents."
+},
+{
+"w": "pound",
+"syl": "pound",
+"s": "The puppy weighs one pound."
+},
+{
+"w": "weight",
+"syl": "weight",
+"s": "Find the weight of the box."
+}
+]
+}
+];
+
+/* ============================================================
+   STATE + STORAGE
+============================================================ */
+const STORE_KEY = "spelling_progress_v1";
+const MASTER_THRESHOLD = 2; // correct (no peek) twice = mastered
+const SESSION_SIZE = 12;     // words per round (weakest words come first)
+let progress = loadProgress();
+let rate = 0.85;
+let state = { list:null, mode:null, queue:[], pos:0, peeked:false, right:0, practiced:new Set(), answered:false, streak:0, sessionCoins:0, newBadges:[], levelAtStart:null };
+
+/* ----- GAME STATE ----- */
+const GAME_KEY = "spelling_game_v1";
+function loadGame(){
+  try{ return Object.assign({coins:0,lifetimeCorrect:0,bestStreak:0,badges:{}}, JSON.parse(localStorage.getItem(GAME_KEY))||{}); }
+  catch(e){ return {coins:0,lifetimeCorrect:0,bestStreak:0,badges:{}}; }
+}
+function saveGame(){ try{ localStorage.setItem(GAME_KEY, JSON.stringify(game)); }catch(e){} }
+let game = loadGame();
+
+const LEVELS = [
+  {min:0,    name:"Spelling Sprout",   icon:"\uD83C\uDF31"},
+  {min:120,  name:"Letter Learner",    icon:"\u270F\uFE0F"},
+  {min:300,  name:"Word Explorer",     icon:"\uD83D\uDD2D"},
+  {min:600,  name:"Spelling Star",     icon:"\u2B50"},
+  {min:1000, name:"Word Wizard",       icon:"\uD83E\uDDD9"},
+  {min:1600, name:"Spelling Champion", icon:"\uD83C\uDFC6"},
+  {min:2500, name:"Spelling Legend",   icon:"\uD83D\uDC51"}
+];
+function currentLevel(){ let lv=LEVELS[0]; for(const l of LEVELS){ if(game.coins>=l.min) lv=l; } return lv; }
+function nextLevel(){ for(const l of LEVELS){ if(game.coins<l.min) return l; } return null; }
+
+const BADGES = [
+  {id:"first",    icon:"\uD83D\uDC23", name:"First Word",     desc:"Spell your first word right"},
+  {id:"streak5",  icon:"\uD83D\uDD25", name:"On Fire",        desc:"Get 5 correct in a row"},
+  {id:"streak10", icon:"\u26A1",        name:"Unstoppable",    desc:"Get 10 correct in a row"},
+  {id:"perfect",  icon:"\uD83D\uDCAF", name:"Perfect Round",  desc:"Finish a round with no misses"},
+  {id:"setmaster",icon:"\uD83C\uDF93", name:"Set Master",     desc:"Master a whole word set"},
+  {id:"words100", icon:"\uD83D\uDCDA", name:"Bookworm",       desc:"Spell 100 words correctly"},
+  {id:"coins500", icon:"\uD83D\uDCB0", name:"Coin Collector", desc:"Earn 500 coins"},
+  {id:"wizard",   icon:"\uD83E\uDDD9", name:"Word Wizard",    desc:"Reach the Word Wizard rank"}
+];
+
+/* ----- funny messages ----- */
+const PRAISE = [
+  "Spelled it like a boss! \uD83D\uDE0E",
+  "Your brain is basically a dictionary now. \uD83D\uDCD6",
+  "Boom! The letters obey you. \uD83D\uDCA5",
+  "That word never stood a chance. \uD83E\uDD4A",
+  "Certified Word Wizard behavior. \uD83E\uDDD9",
+  "Even your pencil is impressed. \u270F\uFE0F",
+  "Spelling ninja strikes again! \uD83E\uDD77",
+  "Nailed it harder than a hammer. \uD83D\uDD28",
+  "10 out of 10 dictionaries agree. \uD83D\uDCDA",
+  "Easy peasy lemon spelling! \uD83C\uDF4B",
+  "Whoa \u2014 did you swallow a dictionary? \uD83D\uDE2E",
+  "You + spelling = unstoppable. \u26A1",
+  "Smooth like peanut butter. \uD83E\uDD5C",
+  "The judges give it a perfect score! \uD83C\uDFC5",
+  "Letters trembled. You conquered. \uD83C\uDFF0",
+  "That was chef's-kiss spelling. \uD83D\uDC69\u200D\uD83C\uDF73",
+  "Spell-tacular! \u2728",
+  "Big brain energy detected. \uD83E\uDDE0",
+  "You spelled that in your sleep, didn't you? \uD83D\uDE34",
+  "Mic drop. Word spelled. \uD83C\uDFA4",
+  "Spelling level: legendary. \uD83D\uDC09",
+  "Cooler than the other side of the pillow. \u2744\uFE0F",
+  "Your spelling just entered beast mode. \uD83E\uDD81",
+  "Yep. You're just showing off now. \uD83C\uDF1F"
+];
+const OOPS = [
+  "So close! Sneaky letters. Here it is:",
+  "Almost! This one likes to trick people:",
+  "Good try! Take a peek at the right way:",
+  "Nice effort \u2014 let's learn this tricky one:",
+  "Oof, the letters got shuffled. Here's the fix:",
+  "Not quite, but you're getting there:",
+  "Tricky word alert! Here's how it goes:",
+  "Close one! Study this spelling for next time:"
+];
+
+function loadProgress(){
+  try{ return JSON.parse(localStorage.getItem(STORE_KEY)) || {}; }catch(e){ return {}; }
+}
+function saveProgress(){
+  try{ localStorage.setItem(STORE_KEY, JSON.stringify(progress)); }catch(e){}
+}
+function wordKey(listId, w){ return listId + "::" + w; }
+function getRec(listId, w){
+  const k = wordKey(listId,w);
+  if(!progress[k]) progress[k] = { streak:0, mastered:false, attempts:0 };
+  return progress[k];
+}
+function isMastered(listId, w){ return !!(progress[wordKey(listId,w)] && progress[wordKey(listId,w)].mastered); }
+function listMasteredCount(list){ return list.words.filter(o=>isMastered(list.id,o.w)).length; }
+function totalWords(){ return LISTS.reduce((n,l)=>n+l.words.length,0); }
+function totalMastered(){ return LISTS.reduce((n,l)=>n+listMasteredCount(l),0); }
+
+/* ============================================================
+   SPEECH (uses the iPad's built-in voice — works offline)
+============================================================ */
+function speak(text, r){
+  try{
+    if(!("speechSynthesis" in window)) return;
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = "en-US";
+    u.rate = r || rate;
+    u.pitch = 1;
+    window.speechSynthesis.speak(u);
+  }catch(e){}
+}
+function spellSlowly(word){
+  // read letters one at a time, then the whole word
+  try{
+    if(!("speechSynthesis" in window)){ return; }
+    window.speechSynthesis.cancel();
+    const letters = word.replace(/[^a-zA-Z']/g,"").split("");
+    letters.forEach(ch=>{
+      const u = new SpeechSynthesisUtterance(ch === "'" ? "apostrophe" : ch.toUpperCase());
+      u.lang="en-US"; u.rate=0.7; window.speechSynthesis.speak(u);
+    });
+  }catch(e){}
+}
+
+/* ============================================================
+   SCREEN ROUTER
+============================================================ */
+const screens = {
+  home: document.getElementById("screen-home"),
+  mode: document.getElementById("screen-mode"),
+  session: document.getElementById("screen-session"),
+  summary: document.getElementById("screen-summary")
+};
+function show(name){
+  try{ window.speechSynthesis && window.speechSynthesis.cancel(); }catch(e){}
+  Object.values(screens).forEach(s=>s.classList.add("hidden"));
+  screens[name].classList.remove("hidden");
+  window.scrollTo(0,0);
+}
+
+/* ============================================================
+   HOME
+============================================================ */
+function renderHome(){
+  const tot = totalWords(), mas = totalMastered();
+  const learning = Object.values(progress).filter(r=>r.attempts>0 && !r.mastered).length;
+  document.getElementById("stat-mastered").textContent = mas;
+  document.getElementById("stat-learning").textContent = learning;
+  document.getElementById("prog-text").textContent = mas + " of " + tot + " words mastered";
+  document.getElementById("prog-fill").style.width = (tot? Math.round(mas/tot*100):0) + "%";
+
+  const grid = document.getElementById("list-grid");
+  grid.innerHTML = "";
+  LISTS.forEach(list=>{
+    const done = listMasteredCount(list), total = list.words.length;
+    const card = document.createElement("button");
+    card.className = "list-card";
+    card.innerHTML =
+      '<div class="emoji">'+list.emoji+'</div>'+
+      '<h3>'+list.name+'</h3>'+
+      '<div class="hint">'+list.hint+'</div>'+
+      '<div class="mini"><div class="mini-bar"><i style="width:'+(total?done/total*100:0)+'%"></i></div>'+
+      '<span class="frac">'+done+'/'+total+'</span></div>';
+    card.onclick = ()=>openList(list);
+    grid.appendChild(card);
+  });
+}
+
+/* ============================================================
+   MODE CHOICE
+============================================================ */
+function openList(list){
+  state.list = list;
+  document.getElementById("mode-emoji").textContent = list.emoji;
+  document.getElementById("mode-title").textContent = list.name;
+  document.getElementById("mode-hint").textContent = list.hint;
+  document.getElementById("mode-frac").textContent = listMasteredCount(list)+"/"+list.words.length;
+  show("mode");
+}
+
+/* ============================================================
+   SESSION
+============================================================ */
+function buildQueue(list){
+  // Order: words needing practice first (least mastered), mastered last.
+  const items = list.words.map(o=>Object.assign({}, o, { rec:getRec(list.id,o.w) }));
+  items.sort((a,b)=>{
+    if(a.rec.mastered !== b.rec.mastered) return a.rec.mastered?1:-1;
+    return a.rec.streak - b.rec.streak;
+  });
+  return items;
+}
+function startSession(mode){
+  state.mode = mode;
+  state.queue = buildQueue(state.list).slice(0, SESSION_SIZE);
+  state.pos = 0;
+  state.right = 0;
+  state.practiced = new Set();
+  show("session");
+  loadWord();
+}
+function currentWord(){ return state.queue[state.pos]; }
+
+function loadWord(){
+  state.peeked = false;
+  state.answered = false;
+  const item = currentWord();
+  document.getElementById("sess-count").textContent = (state.pos+1)+" / "+state.queue.length;
+  document.getElementById("qfill").style.width = (state.pos/state.queue.length*100)+"%";
+
+  const studySee = document.getElementById("study-see");
+  const spellStep = document.getElementById("spell-step");
+  const fb = document.getElementById("feedback");
+  const ans = document.getElementById("answer");
+  const nextBtn = document.getElementById("next-btn");
+  const checkBtn = document.getElementById("check-btn");
+  fb.innerHTML = ""; ans.value = ""; ans.className = "answer";
+  nextBtn.classList.add("hidden"); checkBtn.classList.remove("hidden");
+
+  if(state.mode === "study"){
+    studySee.classList.remove("hidden");
+    spellStep.classList.add("hidden");
+    document.getElementById("see-word").textContent = item.w;
+    document.getElementById("see-syl").textContent = item.syl || "";
+    document.getElementById("see-sent").textContent = item.s ? "\u201C"+item.s+"\u201D" : "";
+    setTimeout(()=>speak(item.w), 350);
+  } else {
+    studySee.classList.add("hidden");
+    spellStep.classList.remove("hidden");
+    document.getElementById("spell-instr").textContent =
+      item.ctx ? "Listen to the sentence, then type the missing word" : "Listen, then type the word";
+    // auto-play after a tap-driven session start; first word handled by gesture
+    setTimeout(()=>{ item.ctx ? speak(item.s) : speak(item.w); }, 350);
+    ans.focus();
+  }
+}
+
+function goToSpell(){
+  state.peeked = true; // study mode shows the word, so it doesn't count toward mastery
+  document.getElementById("study-see").classList.add("hidden");
+  const spellStep = document.getElementById("spell-step");
+  spellStep.classList.remove("hidden");
+  document.getElementById("spell-instr").textContent = "Now spell it from memory";
+  const ans = document.getElementById("answer");
+  ans.value=""; ans.className="answer"; ans.focus();
+}
+
+function normalize(s){ return (s||"").trim().toLowerCase().replace(/\s+/g," "); }
+
+function diffMarkup(typed, correct){
+  // show correct word, marking letters the child missed
+  let out = "";
+  const t = typed.toLowerCase();
+  for(let i=0;i<correct.length;i++){
+    const c = correct[i];
+    const cls = (t[i] && t[i] === c.toLowerCase()) ? "hit" : "miss";
+    out += '<span class="'+cls+'">'+c+'</span>';
+  }
+  return out;
+}
+
+function checkAnswer(){
+  if(state.answered) return;
+  const item = currentWord();
+  const ans = document.getElementById("answer");
+  const fb = document.getElementById("feedback");
+  const typed = ans.value;
+  if(normalize(typed) === ""){ ans.focus(); return; }
+
+  const correct = normalize(typed) === normalize(item.w);
+  const rec = getRec(state.list.id, item.w);
+  rec.attempts++;
+  state.answered = true;
+
+  if(correct){
+    ans.className = "answer ok";
+    if(!state.peeked){
+      rec.streak++;
+      if(rec.streak >= MASTER_THRESHOLD) rec.mastered = true;
+    }
+    state.right++;
+    fb.innerHTML = '<span class="good">'+ pickPraise() +'</span>';
+    speak("Correct!", 1);
+  } else {
+    ans.className = "answer no";
+    rec.streak = 0;
+    rec.mastered = false;
+    state.practiced.add(item.w);
+    fb.innerHTML = '<span class="try">Almost! Here it is:</span>'+
+                   '<div class="correct-show">the correct spelling is'+
+                   '<span class="cw">'+ diffMarkup(typed, item.w) +'</span></div>';
+    spellSlowly(item.w);
+    // re-queue the missed word near the end so it comes back this session
+    if(state.queue.length < 40){
+      const again = Object.assign({}, item);
+      state.queue.push(again);
+    }
+  }
+  saveProgress();
+  document.getElementById("check-btn").classList.add("hidden");
+  const nb = document.getElementById("next-btn");
+  nb.classList.remove("hidden");
+  nb.textContent = (state.pos+1 < state.queue.length) ? "Next word →" : "See results 🎉";
+}
+
+function nextWord(){
+  if(state.pos+1 < state.queue.length){
+    state.pos++;
+    loadWord();
+  } else {
+    finishSession();
+  }
+}
+
+function pickPraise(){
+  const p = ["Correct! 🌟","You got it! 🎉","Spelled it! ✅","Nice spelling! 👏","Perfect! ✨","Yes! Great job! 💪"];
+  return p[Math.floor(Math.random()*p.length)];
+}
+
+function finishSession(){
+  const practiced = state.practiced.size;
+  const total = state.list.words.length;
+  const masteredNow = listMasteredCount(state.list);
+  document.getElementById("sum-right").textContent = state.right;
+  document.getElementById("sum-practice").textContent = practiced;
+  let emoji="🌟", title="Nice work!", sub="";
+  if(masteredNow === total){ emoji="🏆"; title="You mastered the whole set!"; sub="Every word in “"+state.list.name+"” is down. Amazing."; }
+  else if(practiced === 0){ emoji="🎉"; title="Perfect round!"; sub="You spelled every word correctly."; }
+  else { sub="You mastered "+masteredNow+" of "+total+" words in this set. Keep going!"; }
+  document.getElementById("sum-emoji").textContent = emoji;
+  document.getElementById("sum-title").textContent = title;
+  document.getElementById("sum-sub").textContent = sub;
+  show("summary");
+}
+
+/* ============================================================
+   EVENTS
+============================================================ */
+document.querySelectorAll("[data-home]").forEach(b=>b.onclick=()=>{ renderHome(); show("home"); });
+
+document.querySelectorAll("#screen-mode .choice button").forEach(b=>{
+  b.onclick = ()=> startSession(b.getAttribute("data-mode"));
+});
+document.querySelectorAll("#speed-seg button").forEach(b=>{
+  b.onclick = ()=>{
+    rate = parseFloat(b.getAttribute("data-rate"));
+    document.querySelectorAll("#speed-seg button").forEach(x=>x.classList.remove("on"));
+    b.classList.add("on");
+  };
+});
+
+// study "see" step
+document.getElementById("see-hear").onclick = ()=> speak(currentWord().w);
+document.getElementById("see-slow").onclick = ()=> spellSlowly(currentWord().w);
+document.getElementById("see-sentence").onclick = ()=> speak(currentWord().s);
+document.getElementById("see-ready").onclick = goToSpell;
+
+// spell step
+document.getElementById("hear-btn").onclick = ()=>{
+  const item = currentWord();
+  item.ctx ? speak(item.s) : speak(item.w);
+};
+document.getElementById("slow-btn").onclick = ()=> spellSlowly(currentWord().w);
+document.getElementById("sent-btn").onclick = ()=> speak(currentWord().s);
+document.getElementById("check-btn").onclick = checkAnswer;
+document.getElementById("next-btn").onclick = nextWord;
+document.getElementById("answer").addEventListener("keydown", e=>{
+  if(e.key === "Enter"){
+    e.preventDefault();
+    if(state.answered) nextWord(); else checkAnswer();
+  }
+});
+
+document.getElementById("again-btn").onclick = ()=> startSession(state.mode);
+
+document.getElementById("reset-btn").onclick = ()=>{
+  if(confirm("Clear all spelling progress, coins, and badges?")){
+    progress = {}; saveProgress();
+    game = {coins:0,lifetimeCorrect:0,bestStreak:0,badges:{}}; saveGame();
+    renderHome();
+  }
+};
+
+// Greeting (edit the name here if you like)
+const LEARNER_NAME = "Skylar";
+document.getElementById("greeting").textContent = LEARNER_NAME ? ("Hi "+LEARNER_NAME+"! Let's practice spelling.") : "Let's practice spelling.";
+
+// prime speech engine on first touch (iOS needs a user gesture)
+let primed=false;
+document.body.addEventListener("touchstart", ()=>{
+  if(primed) return; primed=true;
+  try{ const u=new SpeechSynthesisUtterance(""); window.speechSynthesis.speak(u); }catch(e){}
+}, {once:true});
+
+
+/* ============================================================
+   GAME HELPERS + OVERRIDES (defined last so they win)
+============================================================ */
+function pickPraise(){ return PRAISE[Math.floor(Math.random()*PRAISE.length)]; }
+function pickOops(){ return OOPS[Math.floor(Math.random()*OOPS.length)]; }
+
+function streakBanner(n){
+  if(n===3) return "\uD83D\uDD25 3 in a row!";
+  if(n===5) return "\uD83D\uDD25\uD83D\uDD25 5 STREAK \u2014 you're on fire!";
+  if(n===8) return "\u26A1 8 STREAK \u2014 unstoppable!";
+  if(n>=10 && n%5===0) return "\uD83D\uDC51 "+n+" STREAK \u2014 spelling royalty!";
+  return "";
+}
+
+function setMascot(face){
+  const m=document.getElementById("mascot"); if(!m) return;
+  m.textContent=face; m.classList.remove("pop"); void m.offsetWidth; m.classList.add("pop");
+}
+
+function updateGameDisplays(){
+  const sc=document.getElementById("sess-coins"); if(sc) sc.textContent=game.coins;
+  const sn=document.getElementById("streak-n"); if(sn) sn.textContent=state.streak;
+  const sf=document.getElementById("streak-flame"); if(sf) sf.classList.toggle("hidden", state.streak<2);
+}
+
+let _ac=null;
+function chime(streak){
+  try{
+    _ac = _ac || new (window.AudioContext||window.webkitAudioContext)();
+    if(_ac.state==="suspended") _ac.resume();
+    const base = 520 + Math.min(streak,8)*45;
+    [0,1].forEach((k,i)=>{
+      const o=_ac.createOscillator(), g=_ac.createGain();
+      o.type="triangle"; o.frequency.value = base*(i?1.5:1);
+      const t=_ac.currentTime+i*0.09;
+      g.gain.setValueAtTime(0.0001,t);
+      g.gain.exponentialRampToValueAtTime(0.16,t+0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001,t+0.22);
+      o.connect(g); g.connect(_ac.destination);
+      o.start(t); o.stop(t+0.24);
+    });
+  }catch(e){}
+}
+
+function confettiBurst(n){
+  const c=document.getElementById("confetti"); if(!c) return;
+  const colors=["#6C7BE0","#3FA77E","#E2864A","#E0A21E","#E86FA6","#7AC4E8"];
+  for(let i=0;i<n;i++){
+    const b=document.createElement("div"); b.className="confetti-bit";
+    b.style.left=Math.random()*100+"vw";
+    b.style.background=colors[i%colors.length];
+    b.style.animationDuration=(1.6+Math.random()*1.4)+"s";
+    b.style.transform="rotate("+(Math.random()*360)+"deg)";
+    c.appendChild(b);
+    setTimeout(()=>b.remove(),3200);
+  }
+}
+
+function floatCoins(n){
+  const el=document.createElement("div"); el.className="coin-float"; el.textContent="+"+n+" \uD83E\uDE99";
+  let x=window.innerWidth/2, y=window.innerHeight*0.35;
+  const m=document.getElementById("mascot");
+  if(m){ const r=m.getBoundingClientRect(); x=r.left+r.width/2; y=r.top; }
+  el.style.left=x+"px"; el.style.top=y+"px";
+  document.body.appendChild(el); setTimeout(()=>el.remove(),1100);
+}
+
+function toast(txt){
+  const t=document.createElement("div"); t.className="toast"; t.textContent=txt;
+  document.body.appendChild(t); setTimeout(()=>t.remove(),2900);
+}
+function unlock(id){
+  const b=BADGES.find(x=>x.id===id);
+  if(b && !game.badges[id]){ game.badges[id]=true; state.newBadges.push(b); toast("\uD83C\uDFC5 Badge unlocked: "+b.name); }
+}
+function checkBadges(justMastered){
+  if(game.lifetimeCorrect>=1) unlock("first");
+  if(state.streak>=5) unlock("streak5");
+  if(state.streak>=10) unlock("streak10");
+  if(game.coins>=500) unlock("coins500");
+  if(game.lifetimeCorrect>=100) unlock("words100");
+  if(game.coins>=1000) unlock("wizard");
+  if(justMastered && listMasteredCount(state.list)===state.list.words.length) unlock("setmaster");
+}
+
+function startSession(mode){
+  state.mode = mode;
+  state.queue = buildQueue(state.list).slice(0, SESSION_SIZE);
+  state.pos = 0;
+  state.right = 0;
+  state.practiced = new Set();
+  state.streak = 0;
+  state.sessionCoins = 0;
+  state.newBadges = [];
+  state.levelAtStart = currentLevel();
+  show("session");
+  setMascot("\uD83D\uDE3A");
+  updateGameDisplays();
+  loadWord();
+}
+
+function loadWord(){
+  state.peeked = false;
+  state.answered = false;
+  const item = currentWord();
+  document.getElementById("sess-count").textContent = (state.pos+1)+" / "+state.queue.length;
+  document.getElementById("qfill").style.width = (state.pos/state.queue.length*100)+"%";
+
+  const studySee = document.getElementById("study-see");
+  const spellStep = document.getElementById("spell-step");
+  const fb = document.getElementById("feedback");
+  const ans = document.getElementById("answer");
+  const nextBtn = document.getElementById("next-btn");
+  const checkBtn = document.getElementById("check-btn");
+  fb.innerHTML = ""; ans.value = ""; ans.className = "answer";
+  nextBtn.classList.add("hidden"); checkBtn.classList.remove("hidden");
+  const mm=document.getElementById("mascot"); if(mm) mm.textContent="\uD83D\uDE3A";
+
+  if(state.mode === "study"){
+    studySee.classList.remove("hidden");
+    spellStep.classList.add("hidden");
+    document.getElementById("see-word").textContent = item.w;
+    document.getElementById("see-syl").textContent = item.syl || "";
+    document.getElementById("see-sent").textContent = item.s ? "\u201C"+item.s+"\u201D" : "";
+    setTimeout(()=>speak(item.w), 350);
+  } else {
+    studySee.classList.add("hidden");
+    spellStep.classList.remove("hidden");
+    document.getElementById("spell-instr").textContent =
+      item.ctx ? "Listen to the sentence, then type the missing word" : "Listen, then type the word";
+    setTimeout(()=>{ item.ctx ? speak(item.s) : speak(item.w); }, 350);
+    ans.focus();
+  }
+}
+
+function checkAnswer(){
+  if(state.answered) return;
+  const item = currentWord();
+  const ans = document.getElementById("answer");
+  const fb = document.getElementById("feedback");
+  const typed = ans.value;
+  if(normalize(typed) === ""){ ans.focus(); return; }
+
+  const correct = normalize(typed) === normalize(item.w);
+  const rec = getRec(state.list.id, item.w);
+  rec.attempts++;
+  state.answered = true;
+
+  if(correct){
+    ans.className = "answer ok";
+    state.streak++;
+    let earned = state.peeked ? 3 : 10;
+    if(state.streak > 1) earned += Math.min(state.streak, 10);
+    let justMastered = false;
+    if(!state.peeked){
+      rec.streak++;
+      if(rec.streak >= MASTER_THRESHOLD && !rec.mastered){ rec.mastered = true; justMastered = true; earned += 20; }
+    }
+    state.right++;
+    game.coins += earned;
+    game.lifetimeCorrect++;
+    if(state.streak > game.bestStreak) game.bestStreak = state.streak;
+    state.sessionCoins += earned;
+
+    setMascot(state.streak >= 5 ? "\uD83D\uDE3B" : "\uD83D\uDE38");
+    chime(state.streak);
+    confettiBurst((justMastered || state.streak % 5 === 0) ? 36 : 14);
+    floatCoins(earned);
+
+    const banner = streakBanner(state.streak);
+    const msg = justMastered ? ("\uD83C\uDF89 WORD MASTERED! "+pickPraise()) : pickPraise();
+    fb.innerHTML = (banner ? '<div class="streak-banner">'+banner+'</div>' : '') +
+                   '<span class="good">'+msg+'</span>';
+    checkBadges(justMastered);
+    updateGameDisplays();
+  } else {
+    ans.className = "answer no";
+    rec.streak = 0;
+    rec.mastered = false;
+    state.streak = 0;
+    state.practiced.add(item.w);
+    setMascot("\uD83D\uDE49");
+    fb.innerHTML = '<span class="try">'+pickOops()+'</span>'+
+                   '<div class="correct-show">the correct spelling is'+
+                   '<span class="cw">'+ diffMarkup(typed, item.w) +'</span></div>';
+    spellSlowly(item.w);
+    if(state.queue.length < 40){ state.queue.push(Object.assign({}, item)); }
+    updateGameDisplays();
+  }
+  saveProgress(); saveGame();
+  document.getElementById("check-btn").classList.add("hidden");
+  const nb = document.getElementById("next-btn");
+  nb.classList.remove("hidden");
+  nb.textContent = (state.pos+1 < state.queue.length) ? "Next word \u2192" : "See results \uD83C\uDF89";
+}
+
+function finishSession(){
+  const practiced = state.practiced.size;
+  const total = state.list.words.length;
+  let perfect = false;
+  if(practiced === 0 && state.right > 0){
+    perfect = true; game.coins += 25; state.sessionCoins += 25; unlock("perfect");
+  }
+  if(listMasteredCount(state.list) === total) unlock("setmaster");
+  if(game.coins >= 1000) unlock("wizard");
+  if(game.coins >= 500) unlock("coins500");
+  saveGame();
+
+  const masteredNow = listMasteredCount(state.list);
+  document.getElementById("sum-right").textContent = state.right;
+  document.getElementById("sum-practice").textContent = practiced;
+  document.getElementById("sum-coins").textContent = state.sessionCoins;
+
+  let emoji="\uD83C\uDF1F", title="Nice work!", sub="";
+  if(masteredNow === total){ emoji="\uD83C\uDFC6"; title="You mastered the whole set!"; sub="Every word in \u201C"+state.list.name+"\u201D is down. Amazing!"; }
+  else if(perfect){ emoji="\uD83C\uDF89"; title="Perfect round!"; sub="You spelled every word correctly. +25 bonus coins!"; }
+  else { sub="You mastered "+masteredNow+" of "+total+" words in this set. Keep going!"; }
+  document.getElementById("sum-emoji").textContent = emoji;
+  document.getElementById("sum-title").textContent = title;
+  document.getElementById("sum-sub").textContent = sub;
+
+  let extra="";
+  const lvNow = currentLevel();
+  if(state.levelAtStart && lvNow.name !== state.levelAtStart.name){
+    extra += '<div class="levelup-banner">\uD83C\uDF8A LEVEL UP! You are now a '+lvNow.icon+' '+lvNow.name+'!</div>';
+  }
+  if(state.newBadges.length){
+    extra += '<div style="margin-bottom:8px;font-weight:800;color:var(--ink-soft);font-size:13px;">New badges</div>';
+    state.newBadges.forEach(b=>{ extra += '<span class="badge-pop">'+b.icon+' '+b.name+'</span>'; });
+  }
+  document.getElementById("sum-extra").innerHTML = extra;
+  if(perfect || masteredNow === total) confettiBurst(48);
+  show("summary");
+}
+
+function renderHome(){
+  const tot = totalWords(), mas = totalMastered();
+  const learning = Object.values(progress).filter(r=>r.attempts>0 && !r.mastered).length;
+  document.getElementById("stat-mastered").textContent = mas;
+  document.getElementById("stat-learning").textContent = learning;
+  const hc=document.getElementById("home-coins"); if(hc) hc.textContent = game.coins;
+  document.getElementById("prog-text").textContent = mas + " of " + tot + " words mastered";
+  document.getElementById("prog-fill").style.width = (tot? Math.round(mas/tot*100):0) + "%";
+
+  // rank / level
+  const lv = currentLevel(), nx = nextLevel();
+  document.getElementById("rank-emoji").textContent = lv.icon;
+  document.getElementById("rank-name").textContent = lv.name;
+  document.getElementById("level-coins").textContent = "\uD83E\uDE99 " + game.coins;
+  if(nx){
+    const span = nx.min - lv.min, into = game.coins - lv.min;
+    document.getElementById("level-fill").style.width = Math.max(5, Math.round(into/span*100)) + "%";
+    document.getElementById("rank-sub").textContent = (nx.min - game.coins) + " coins to " + nx.icon + " " + nx.name;
+  } else {
+    document.getElementById("level-fill").style.width = "100%";
+    document.getElementById("rank-sub").textContent = "Top rank reached! \uD83D\uDC51";
+  }
+
+  // badges
+  const bg = document.getElementById("badge-grid"); bg.innerHTML = "";
+  BADGES.forEach(b=>{
+    const on = !!game.badges[b.id];
+    const d = document.createElement("div");
+    d.className = "badge" + (on ? " on" : "");
+    d.title = b.desc;
+    d.innerHTML = '<div class="bi">'+b.icon+'</div><div class="bn">'+(on ? b.name : "???")+'</div>';
+    bg.appendChild(d);
+  });
+
+  // word sets
+  const grid = document.getElementById("list-grid");
+  grid.innerHTML = "";
+  LISTS.forEach(list=>{
+    const done = listMasteredCount(list), total = list.words.length;
+    const card = document.createElement("button");
+    card.className = "list-card";
+    card.innerHTML =
+      '<div class="emoji">'+list.emoji+'</div>'+
+      '<h3>'+list.name+'</h3>'+
+      '<div class="hint">'+list.hint+'</div>'+
+      '<div class="mini"><div class="mini-bar"><i style="width:'+(total?done/total*100:0)+'%"></i></div>'+
+      '<span class="frac">'+done+'/'+total+'</span></div>';
+    card.onclick = ()=>openList(list);
+    grid.appendChild(card);
+  });
+}
+
+renderHome();
+show("home");
+
+</script>
+<script>
+if("serviceWorker" in navigator){
+  window.addEventListener("load", function(){
+    navigator.serviceWorker.register("sw.js").catch(function(){});
+  });
+}
+</script>
+</body>
+</html>

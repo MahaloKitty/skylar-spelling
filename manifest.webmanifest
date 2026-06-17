@@ -1,0 +1,16 @@
+{
+  "name": "Spelling Practice",
+  "short_name": "Spelling",
+  "description": "Offline 5th-grade spelling practice with games and rewards.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FDF6F9",
+  "theme_color": "#6C7BE0",
+  "icons": [
+    { "src": "icon-180.png", "sizes": "180x180", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
