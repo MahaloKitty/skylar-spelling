@@ -1,6 +1,6 @@
 /* Spelling Practice — offline service worker.
    Caches the whole app on first visit so it runs with no internet afterward. */
-const CACHE = "princess-swim-v2";
+const CACHE = "princess-swim-v3";
 const ASSETS = [
   "./",
   "./index.html",

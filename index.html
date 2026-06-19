@@ -143,15 +143,15 @@
   <!-- ===== MAP ===== -->
   <section id="s-map">
     <div class="hud">
-      <span class="chip-stat">\U0001fa99 <b id="m-coins">0</b></span>
-      <span class="chip-stat">\U0001f48e <b id="m-jewels">0</b></span>
-      <span class="chip-stat">\U0001fa77 <b id="m-lives">3</b></span>
+      <span class="chip-stat">🪙 <b id="m-coins">0</b></span>
+      <span class="chip-stat">💎 <b id="m-jewels">0</b></span>
+      <span class="chip-stat">🩷 <b id="m-lives">3</b></span>
     </div>
     <h1 class="title">Princess Skylar's Swim to the Yacht</h1>
-    <p class="subtitle">Spell words to swim closer \u2014 watch out for sharks! \U0001f988</p>
+    <p class="subtitle">Spell words to swim closer — watch out for sharks! 🦈</p>
 
     <div class="goal">
-      <div class="big">\U0001f6e5\uFE0F \U0001f389</div>
+      <div class="big">🛥️ 🎉</div>
       Reach the super fancy yacht party!
     </div>
 
@@ -159,7 +159,7 @@
 
     <div class="treasures">
       <div class="lbl">Treasures collected</div>
-      <div class="row" id="treasure-row"><span class="none">None yet \u2014 win a level to earn a prize!</span></div>
+      <div class="row" id="treasure-row"><span class="none">None yet — win a level to earn a prize!</span></div>
     </div>
 
     <button class="reset-link" id="reset-btn">Start the adventure over</button>
@@ -169,36 +169,36 @@
   <section id="s-game" class="hidden">
     <div class="hud">
       <span class="chip-stat" id="g-level">Level 1</span>
-      <span class="chip-stat">\U0001fa99 <b id="g-coins">0</b></span>
-      <span class="chip-stat">\U0001f48e <b id="g-jewels">0</b></span>
-      <span class="chip-stat" id="g-lives">\U0001fa77\U0001fa77\U0001fa77</span>
+      <span class="chip-stat">🪙 <b id="g-coins">0</b></span>
+      <span class="chip-stat">💎 <b id="g-jewels">0</b></span>
+      <span class="chip-stat" id="g-lives">🩷🩷🩷</span>
     </div>
 
     <div class="ocean">
-      <div class="sun">\u2600\uFE0F</div>
-      <div class="cloud c1">\u2601\uFE0F</div>
-      <div class="cloud c2">\u2601\uFE0F</div>
-      <div class="party">\U0001f388\U0001f389</div>
-      <div class="yacht">\U0001f6e5\uFE0F</div>
-      <div class="wave a">\U0001f30a</div>
-      <div class="wave b">\U0001f30a</div>
-      <div class="wave c">\U0001f30a</div>
-      <div class="shark" id="shark">\U0001f988</div>
-      <div class="princess" id="princess">\U0001f9dc\u200d\u2640\uFE0F</div>
+      <div class="sun">☀️</div>
+      <div class="cloud c1">☁️</div>
+      <div class="cloud c2">☁️</div>
+      <div class="party">🎈🎉</div>
+      <div class="yacht">🛥️</div>
+      <div class="wave a">🌊</div>
+      <div class="wave b">🌊</div>
+      <div class="wave c">🌊</div>
+      <div class="shark" id="shark">🦈</div>
+      <div class="princess" id="princess">🧜‍♀️</div>
     </div>
     <div class="scene-meta">
-      <span>\U0001f6e5\uFE0F <b id="togo">8</b> words to the yacht</span>
-      <span class="danger-pips" id="danger">\U0001f30a\U0001f30a\U0001f30a</span>
+      <span>🛥️ <b id="togo">8</b> words to the yacht</span>
+      <span class="danger-pips" id="danger">🌊🌊🌊</span>
     </div>
 
     <div class="panel">
       <p class="listen-hint" id="prompt">Listen, then spell the word to swim!</p>
       <div class="center">
-        <button class="speak-btn" id="hear"><span class="ic">\U0001f50a</span> Hear it</button>
+        <button class="speak-btn" id="hear"><span class="ic">🔊</span> Hear it</button>
         <div class="helper-row">
-          <button class="chip" id="slow">\U0001f422 Slowly</button>
-          <button class="chip" id="sent">\U0001f4ac Sentence</button>
-          <button class="chip" id="hintb">\U0001f4a1 Hint</button>
+          <button class="chip" id="slow">🐢 Slowly</button>
+          <button class="chip" id="sent">💬 Sentence</button>
+          <button class="chip" id="hintb">💡 Hint</button>
         </div>
         <div class="hint-show" id="hintshow"></div>
       </div>
@@ -206,8 +206,8 @@
              autocapitalize="none" autocorrect="off" autocomplete="off" spellcheck="false"
              enterkeyhint="done" placeholder="type here">
       <div class="feedback" id="feedback"></div>
-      <button class="primary-btn" id="check">Check it \u2713</button>
-      <button class="primary-btn green hidden" id="next">Keep swimming \u2192</button>
+      <button class="primary-btn" id="check">Check it ✓</button>
+      <button class="primary-btn green hidden" id="next">Keep swimming →</button>
       <button class="reset-link" id="quit">Back to the map</button>
     </div>
   </section>
@@ -215,14 +215,14 @@
   <!-- ===== REWARD ===== -->
   <section id="s-reward" class="hidden big-screen">
     <div class="reward-card">
-      <div class="emoji" id="rw-emoji">\U0001f349</div>
+      <div class="emoji" id="rw-emoji">🍉</div>
       <h2 id="rw-title">Level complete!</h2>
       <p id="rw-line">You reached the yacht!</p>
       <div class="earn-row">
-        <div class="earn"><div class="n" id="rw-coins">\U0001fa99 0</div><div class="l">coins</div></div>
-        <div class="earn"><div class="n" id="rw-jewels">\U0001f48e 0</div><div class="l">jewels</div></div>
+        <div class="earn"><div class="n" id="rw-coins">🪙 0</div><div class="l">coins</div></div>
+        <div class="earn"><div class="n" id="rw-jewels">💎 0</div><div class="l">jewels</div></div>
       </div>
-      <button class="primary-btn green" id="rw-bonus">\U0001f4a6 Bonus Splash Round!</button>
+      <button class="primary-btn green" id="rw-bonus">💦 Bonus Splash Round!</button>
       <button class="primary-btn" id="rw-skip" style="margin-top:10px;">Back to the map</button>
     </div>
   </section>
@@ -230,35 +230,35 @@
   <!-- ===== BONUS ===== -->
   <section id="s-bonus" class="hidden">
     <div class="hud">
-      <span class="chip-stat">\U0001f4a6 Bonus Splash</span>
-      <span class="chip-stat">\U0001f48e <b id="b-jewels">0</b></span>
+      <span class="chip-stat">💦 Bonus Splash</span>
+      <span class="chip-stat">💎 <b id="b-jewels">0</b></span>
       <span class="chip-stat" id="b-prog">1 / 5</span>
     </div>
     <div class="panel">
-      <p class="listen-hint">No sharks here \u2014 spell for jewels! \U0001f48e</p>
+      <p class="listen-hint">No sharks here — spell for jewels! 💎</p>
       <div class="center">
-        <button class="speak-btn" id="b-hear"><span class="ic">\U0001f50a</span> Hear it</button>
+        <button class="speak-btn" id="b-hear"><span class="ic">🔊</span> Hear it</button>
         <div class="helper-row">
-          <button class="chip" id="b-slow">\U0001f422 Slowly</button>
-          <button class="chip" id="b-sent">\U0001f4ac Sentence</button>
+          <button class="chip" id="b-slow">🐢 Slowly</button>
+          <button class="chip" id="b-sent">💬 Sentence</button>
         </div>
       </div>
       <input class="answer" id="b-answer" type="text" inputmode="text"
              autocapitalize="none" autocorrect="off" autocomplete="off" spellcheck="false"
              enterkeyhint="done" placeholder="type here">
       <div class="feedback" id="b-feedback"></div>
-      <button class="primary-btn" id="b-check">Check it \u2713</button>
-      <button class="primary-btn green hidden" id="b-next">Next \u2192</button>
+      <button class="primary-btn" id="b-check">Check it ✓</button>
+      <button class="primary-btn green hidden" id="b-next">Next →</button>
     </div>
   </section>
 
   <!-- ===== GAME OVER ===== -->
   <section id="s-over" class="hidden big-screen">
     <div class="reward-card">
-      <div class="emoji">\U0001f30a\U0001f988</div>
+      <div class="emoji">🌊🦈</div>
       <h2>The sharks got too close!</h2>
-      <p>Catch your breath \u2014 you can do this. Your coins and jewels are safe.</p>
-      <button class="primary-btn green" id="over-retry">Try this level again \U0001f3ca\u200d\u2640\uFE0F</button>
+      <p>Catch your breath — you can do this. Your coins and jewels are safe.</p>
+      <button class="primary-btn green" id="over-retry">Try this level again 🏊‍♀️</button>
       <button class="primary-btn" id="over-map" style="margin-top:10px;">Back to the map</button>
     </div>
   </section>
@@ -266,12 +266,12 @@
   <!-- ===== WIN ===== -->
   <section id="s-win" class="hidden big-screen">
     <div class="reward-card">
-      <div class="emoji">\U0001f6e5\uFE0F\U0001f451</div>
+      <div class="emoji">🛥️👑</div>
       <h2>YOU MADE IT TO THE YACHT PARTY!</h2>
-      <p id="win-line">Princess Skylar swam past every shark and reached the super fancy yacht. The party can begin! \U0001f389</p>
+      <p id="win-line">Princess Skylar swam past every shark and reached the super fancy yacht. The party can begin! 🎉</p>
       <div class="earn-row">
-        <div class="earn"><div class="n" id="win-coins">\U0001fa99 0</div><div class="l">coins</div></div>
-        <div class="earn"><div class="n" id="win-jewels">\U0001f48e 0</div><div class="l">jewels</div></div>
+        <div class="earn"><div class="n" id="win-coins">🪙 0</div><div class="l">coins</div></div>
+        <div class="earn"><div class="n" id="win-jewels">💎 0</div><div class="l">jewels</div></div>
       </div>
       <button class="primary-btn green" id="win-map">Back to the map</button>
     </div>
